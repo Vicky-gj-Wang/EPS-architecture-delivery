@@ -1,0 +1,134 @@
+<mxfile host="app.diagrams.net" modified="2026-05-21T10:00:00.000Z" agent="Mozilla/5.0" version="24.7.17">
+  <diagram id="adc-chain" name="Page-1">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="EPS ADC采样链路专题图（BSP/LLD，截止至FOC与Safety）" style="text;html=1;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#333333;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="420" y="20" width="1260" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lane1" value="触发源（PWM/TOM）" style="swimlane;rounded=1;arcSize=6;shadow=1;startSize=30;fontStyle=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#f5a623;fontColor=#4e342e;" vertex="1" parent="1">
+          <mxGeometry x="30" y="90" width="390" height="980" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane2" value="BSP配置层" style="swimlane;rounded=1;arcSize=6;shadow=1;startSize=30;fontStyle=1;whiteSpace=wrap;html=1;fillColor=#fff8e1;strokeColor=#ffb300;fontColor=#5d4037;" vertex="1" parent="1">
+          <mxGeometry x="430" y="90" width="390" height="980" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane3" value="LLD/VADC执行层" style="swimlane;rounded=1;arcSize=6;shadow=1;startSize=30;fontStyle=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#e91e63;fontColor=#880e4f;" vertex="1" parent="1">
+          <mxGeometry x="830" y="90" width="390" height="980" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane4" value="APP采样整形层" style="swimlane;rounded=1;arcSize=6;shadow=1;startSize=30;fontStyle=1;whiteSpace=wrap;html=1;fillColor=#e0f7fa;strokeColor=#00acc1;fontColor=#006064;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="90" width="390" height="980" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane5" value="消费端（FOC/Safety）" style="swimlane;rounded=1;arcSize=6;shadow=1;startSize=30;fontStyle=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1976d2;fontColor=#0d47a1;" vertex="1" parent="1">
+          <mxGeometry x="1630" y="90" width="390" height="980" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="n1" value="TimerInit()&#xa;配置PWM/TOM" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" vertex="1" parent="lane1">
+          <mxGeometry x="35" y="70" width="320" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="n2" value="ADC0TriggerPointSet()&#xa;ADC1TriggerPointSet()" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" vertex="1" parent="lane1">
+          <mxGeometry x="35" y="170" width="320" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="n3" value="Bsp_Init: ADCInit()" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#fff9c4;strokeColor=#f9a825;fontColor=#4e342e;" vertex="1" parent="lane2">
+          <mxGeometry x="35" y="70" width="320" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="n4" value="GroupInit()&#xa;G0_ChannelInit() / G1_ChannelInit()" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#fff9c4;strokeColor=#f9a825;fontColor=#4e342e;" vertex="1" parent="lane2">
+          <mxGeometry x="35" y="170" width="320" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="n5" value="ADThreePhaseQueue()&#xa;运行态重排采样队列" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#fff9c4;strokeColor=#f9a825;fontColor=#4e342e;" vertex="1" parent="lane2">
+          <mxGeometry x="35" y="270" width="320" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="n6" value="GROUP_CONFIG_TABLE&#xa;queueRequest: risingEdge + TriggerSource_15" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#f8bbd0;strokeColor=#e91e63;fontColor=#880e4f;" vertex="1" parent="lane3">
+          <mxGeometry x="35" y="70" width="320" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="n7" value="VADC队列采样执行&#xa;Adc_ResultGet() 读取结果寄存器" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#f8bbd0;strokeColor=#e91e63;fontColor=#880e4f;" vertex="1" parent="lane3">
+          <mxGeometry x="35" y="180" width="320" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="n8" value="GetCurrentAdcVal()&#xa;三相电流 + OOS校验与换算" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#b2ebf2;strokeColor=#00acc1;fontColor=#006064;" vertex="1" parent="lane4">
+          <mxGeometry x="35" y="70" width="320" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="n9" value="GetDcBusVltgVal() + Filter&#xa;母线电压链路" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#b2ebf2;strokeColor=#00acc1;fontColor=#006064;" vertex="1" parent="lane4">
+          <mxGeometry x="35" y="180" width="320" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="n10" value="GetBridgeVltgVal() + Filter&#xa;桥臂/电机电压链路" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#b2ebf2;strokeColor=#00acc1;fontColor=#006064;" vertex="1" parent="lane4">
+          <mxGeometry x="35" y="290" width="320" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="n11" value="GetAdcSaftyCheckState()&#xa;置位 AdcCheckError" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#b2ebf2;strokeColor=#00acc1;fontColor=#006064;" vertex="1" parent="lane4">
+          <mxGeometry x="35" y="400" width="320" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="n12" value="IntStateMachineHndl()&#xa;iAbcFbck / modulationArgs 使用" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#bbdefb;strokeColor=#1976d2;fontColor=#0d47a1;" vertex="1" parent="lane5">
+          <mxGeometry x="35" y="110" width="320" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="n13" value="AdcSaftyCheck_D()&#xa;Safety诊断读取 AdcCheckError" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#bbdefb;strokeColor=#1976d2;fontColor=#0d47a1;" vertex="1" parent="lane5">
+          <mxGeometry x="35" y="430" width="320" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f5a623;fontColor=#f5a623;fontSize=9;" edge="1" parent="1" source="n1" target="n2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="初始化调用" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;fontColor=#f9a825;fontSize=9;" edge="1" parent="1" source="n2" target="n3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;fontColor=#f9a825;fontSize=9;" edge="1" parent="1" source="n3" target="n4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;fontColor=#f9a825;fontSize=9;" edge="1" parent="1" source="n4" target="n5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="PWM边沿触发" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#e91e63;fontColor=#e91e63;fontSize=9;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="队列转换" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#e91e63;fontColor=#e91e63;fontSize=9;" edge="1" parent="1" source="n6" target="n7">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e7" value="电流链路" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#00acc1;fontColor=#00acc1;fontSize=9;" edge="1" parent="1" source="n7" target="n8">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="母线链路" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#00acc1;fontColor=#00acc1;fontSize=9;" edge="1" parent="1" source="n7" target="n9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="桥臂链路" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#00acc1;fontColor=#00acc1;fontSize=9;" edge="1" parent="1" source="n7" target="n10">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" value="异常聚合" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#00acc1;fontColor=#00acc1;fontSize=9;" edge="1" parent="1" source="n8" target="n11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#00acc1;fontColor=#00acc1;fontSize=9;" edge="1" parent="1" source="n9" target="n11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#00acc1;fontColor=#00acc1;fontSize=9;" edge="1" parent="1" source="n10" target="n11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e13" value="FOC消费" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#1976d2;fontColor=#1976d2;fontSize=9;" edge="1" parent="1" source="n8" target="n12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#1976d2;fontColor=#1976d2;fontSize=9;" edge="1" parent="1" source="n9" target="n12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#1976d2;fontColor=#1976d2;fontSize=9;" edge="1" parent="1" source="n10" target="n12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e16" value="Safety消费" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#1976d2;fontColor=#1976d2;fontSize=9;" edge="1" parent="1" source="n11" target="n13">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="legend" value="图例：实线=已展开链路；虚线=未展开/跨专题链路" style="text;html=1;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="1110" width="620" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note" value="未展开说明：&#xa;1) 未展开对象范围：ADC寄存器位级配置、LLD底层寄存器访问细节、DMA模式分支、FOC后续控制环细节。&#xa;2) 未展开原因：避免主链路交叉过密，保持触发-采样-消费路径可读。&#xa;3) 详细信息去向：后续可拆分为《ADC寄存器配置专题图》《FOC控制环专题图》。&#xa;4) 方向选择理由：本图主目标是跨参与者触发-响应链路，因此采用纵向参与者泳道；未采用横向分层泳道以避免时序关系弱化。" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=11;fillColor=#f5f5f5;strokeColor=#9e9e9e;fontColor=#333333;align=left;verticalAlign=top;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="1150" width="1990" height="180" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

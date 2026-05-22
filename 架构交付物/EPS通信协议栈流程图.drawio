@@ -1,0 +1,224 @@
+<mxfile host="65bd71144e">
+    <diagram id="eps_comm_stack_v5" name="EPS通信协议栈流程图">
+        <mxGraphModel dx="1427" dy="669" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="EPS通信协议栈流程图（左右分支版）" style="text;whiteSpace=wrap;fontSize=18;fontStyle=1;fontColor=#333333;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="750" y="16" width="1100" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_lld" value="LLD/BSP层  CAN硬件接口（Bsp_Can）" style="swimlane;rounded=1;arcSize=6;shadow=1;fontStyle=1;startSize=30;fillColor=#fce4ec;strokeColor=#e91e63;fontColor=#880e4f;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="74" width="2110" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="can_rx" value="CAN RX帧入口&#xa;Bsp_Can接收" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#f8bbd0;strokeColor=#e91e63;fontColor=#880e4f;" parent="lane_lld" vertex="1">
+                    <mxGeometry x="460" y="51" width="200" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="can_tx" value="CAN TX帧发送&#xa;Bsp_Can发送" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#f8bbd0;strokeColor=#e91e63;fontColor=#880e4f;" parent="lane_lld" vertex="1">
+                    <mxGeometry x="1437" y="38" width="200" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_tp" value="传输层 " style="swimlane;rounded=1;arcSize=6;shadow=1;fontStyle=1;startSize=30;fillColor=#e8eaf6;strokeColor=#5c6bc0;fontColor=#283593;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="204" width="2110" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="lbl_left" value=" 整车通信链路（J1939 BAM）" style="text;fontSize=11;fontStyle=1;fontColor=#283593;" parent="lane_tp" vertex="1">
+                    <mxGeometry x="350" y="6" width="380" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="lbl_right" value="诊断通信链路（ISO15765 + UDS）" style="text;fontSize=11;fontStyle=1;fontColor=#00838f;align=right;" parent="lane_tp" vertex="1">
+                    <mxGeometry x="1407" y="6" width="430" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="j1939_tx" value="J1939 BAM | TX&#xa;TPCMRequestBAM&#xa;J1939TP.c:79" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#c5cae9;strokeColor=#5c6bc0;fontColor=#283593;" parent="lane_tp" vertex="1">
+                    <mxGeometry x="651" y="46" width="250" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="j1939_rx" value="J1939 BAM | RX&#xa;J1939TPReceiveData&#xa;J1939TP.c:44" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#c5cae9;strokeColor=#5c6bc0;fontColor=#283593;" parent="lane_tp" vertex="1">
+                    <mxGeometry x="30" y="47" width="250" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_e2e" value="E2E保护层（整车链路）" style="swimlane;rounded=1;arcSize=6;shadow=1;fontStyle=1;startSize=30;fillColor=#e3f2fd;strokeColor=#1976d2;fontColor=#0d47a1;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="364" width="1150" height="130" as="geometry">
+                        <mxRectangle x="90" y="364" width="170" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lane_app" value="应用协议层  AppComProtocol" style="swimlane;rounded=1;arcSize=6;shadow=1;fontStyle=1;startSize=30;fillColor=#fff3e0;strokeColor=#f5a623;fontColor=#4e342e;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="514" width="1150" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="app_rx" value="App | RX处理&#xa;RecieveAppHandleFunc&#xa;AppComProtocol.c:354" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_app" vertex="1">
+                    <mxGeometry x="40" y="46" width="230" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_uds" value="UDS诊断服务层  Diagnostic.c" style="swimlane;rounded=1;arcSize=6;shadow=1;fontStyle=1;startSize=30;fillColor=#e0f7fa;strokeColor=#00acc1;fontColor=#006064;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="1290" y="364" width="910" height="280" as="geometry">
+                        <mxRectangle x="1290" y="364" width="190" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="uds_services" value="Service 10/19/27/2E/34/37&#xa;393 / 1468 / 579 / 1229 / 1892 / 1995&#xa;（Diagnostic.c）" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#b2ebf2;strokeColor=#00acc1;fontColor=#006064;" parent="lane_uds" vertex="1">
+                    <mxGeometry x="332" y="180" width="248" height="76" as="geometry"/>
+                </mxCell>
+                <mxCell id="uds_entry" value="UDS请求入口&#xa;Diagnostic.c:2607" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#b2ebf2;strokeColor=#00acc1;fontColor=#006064;" parent="lane_uds" vertex="1">
+                    <mxGeometry x="116" y="43" width="230" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="uds_table" value="Service分发表&#xa;Diagnostic.c:140" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#b2ebf2;strokeColor=#00acc1;fontColor=#006064;" parent="lane_uds" vertex="1">
+                    <mxGeometry x="496" y="44" width="220" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#00acc1;" parent="lane_uds" source="uds_entry" target="uds_table" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="460" y="72"/>
+                            <mxPoint x="460" y="72"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lane_nm" value="网络管理层  NM状态机（控制平面）" style="swimlane;rounded=1;arcSize=6;shadow=1;fontStyle=1;startSize=30;fillColor=#e8f5e9;strokeColor=#43a047;fontColor=#1b5e20;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="664" width="2110" height="236" as="geometry"/>
+                </mxCell>
+                <mxCell id="nm_event" value="BusOff/恢复事件&#xa;SetEvent NM.c:63/142/184" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#c8e6c9;strokeColor=#43a047;fontColor=#1b5e20;" parent="lane_nm" vertex="1">
+                    <mxGeometry x="678" y="166" width="260" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="iso_rx" value="ISO15765 | RX&#xa;NetworkLayer接收缓存&#xa;NetworkLayer.c:32" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#c5cae9;strokeColor=#5c6bc0;fontColor=#283593;" parent="1" vertex="1">
+                    <mxGeometry x="1390" y="250" width="260" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="iso_tx" value="ISO15765 | TX&#xa;NetworkSend发送&#xa;NetworkLayer.c:743" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#c5cae9;strokeColor=#5c6bc0;fontColor=#283593;" parent="1" vertex="1">
+                    <mxGeometry x="1900" y="254" width="260" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2e_rx" value="E2E | RX校验&#xa;E2E_P01Check&#xa;E2E_P0xProtocol.c:74" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#bbdefb;strokeColor=#1976d2;fontColor=#0d47a1;" parent="1" vertex="1">
+                    <mxGeometry x="130" y="413" width="230" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2e_cfg" value="E2E配置表&#xa;E2E_P0xProtocol.c:30" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#bbdefb;strokeColor=#1976d2;fontColor=#0d47a1;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="412" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2e_tx" value="E2E | TX保护&#xa;E2E_P01Protect&#xa;E2E_P0xProtocol.c:254" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#bbdefb;strokeColor=#1976d2;fontColor=#0d47a1;" parent="1" vertex="1">
+                    <mxGeometry x="750" y="411" width="230" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="app_route" value="消息路由与变量刷新&#xa;AppComProtocol.c:809" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="560" width="220" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="app_tx" value="App | TX打包&#xa;AppComProtocol.c:134" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="1" vertex="1">
+                    <mxGeometry x="750" y="560" width="230" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="nm_init" value="NM CommInit&#xa;NM.c:215" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#c8e6c9;strokeColor=#43a047;fontColor=#1b5e20;" parent="1" vertex="1">
+                    <mxGeometry x="584" y="717" width="190" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="nm_active" value="NM Active&#xa;NM.c:228" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#c8e6c9;strokeColor=#43a047;fontColor=#1b5e20;" parent="1" vertex="1">
+                    <mxGeometry x="824" y="717" width="180" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="nm_shutdown" value="NM Shutdown&#xa;NM.c:275" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#c8e6c9;strokeColor=#43a047;fontColor=#1b5e20;" parent="1" vertex="1">
+                    <mxGeometry x="1054" y="717" width="200" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#5c6bc0;" parent="1" source="can_rx" target="j1939_rx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#1976d2;" parent="1" source="j1939_rx" target="e2e_rx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#f5a623;" parent="1" source="e2e_rx" target="app_rx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#f5a623;" parent="1" source="app_rx" target="app_route" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#f5a623;" parent="1" source="app_route" target="app_tx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#1976d2;" parent="1" source="app_tx" target="e2e_tx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#5c6bc0;" parent="1" source="e2e_tx" target="j1939_tx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#e91e63;" parent="1" source="j1939_tx" target="can_tx" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="865" y="135"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_cfg1" value="配置引用" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeWidth=1;dashed=1;strokeColor=#1976d2;fontColor=#1976d2;fontSize=9;" parent="1" source="e2e_cfg" target="e2e_rx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_cfg2" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeWidth=1;dashed=1;strokeColor=#1976d2;" parent="1" source="e2e_cfg" target="e2e_tx" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e9" value="诊断RX" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#00acc1;fontColor=#00acc1;fontSize=9;" parent="1" source="can_rx" target="iso_rx" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="750" y="160"/>
+                            <mxPoint x="1520" y="160"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#00acc1;" parent="1" source="iso_rx" target="uds_entry" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e13" value="诊断TX" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#00acc1;fontColor=#00acc1;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="uds_services" target="iso_tx" edge="1">
+                    <mxGeometry x="0.2567" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="2030" y="582"/>
+                        </Array>
+                        <mxPoint x="1870" y="618" as="sourcePoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#e91e63;" parent="1" source="iso_tx" target="can_tx" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="2030" y="137"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#43a047;" parent="1" source="nm_init" target="nm_active" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#43a047;" parent="1" source="nm_active" target="nm_shutdown" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#43a047;entryX=0.469;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="nm_active" target="nm_event" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="890" y="820"/>
+                        </Array>
+                        <mxPoint x="890" y="820" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e18" value="使能整车TX" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;dashed=1;strokeColor=#43a047;fontColor=#43a047;fontSize=9;" parent="1" source="nm_active" target="j1939_tx" edge="1">
+                    <mxGeometry x="-0.0766" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="914" y="710"/>
+                            <mxPoint x="1010" y="710"/>
+                            <mxPoint x="1010" y="284"/>
+                        </Array>
+                        <mxPoint y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e19" value="使能诊断TX" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;dashed=1;strokeColor=#43a047;fontColor=#43a047;fontSize=9;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" parent="1" source="nm_active" target="iso_tx" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1040" y="731"/>
+                            <mxPoint x="1040" y="340"/>
+                            <mxPoint x="1983" y="340"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e20" value="CAN BusOff事件上报" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;dashed=1;strokeColor=#43a047;fontColor=#43a047;fontSize=9;entryX=0.12;entryY=-0.001;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="can_rx" target="nm_event" edge="1">
+                    <mxGeometry x="0.2566" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="730" y="710"/>
+                            <mxPoint x="799" y="710"/>
+                        </Array>
+                        <mxPoint x="800" y="820" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="legend" value="图例    ——  实线 = 业务报文数据流（Payload）    - - -  虚线 = 控制流/状态流（NM使能、关闭、BusOff恢复）" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#fafafa;strokeColor=#bdbdbd;fontColor=#616161;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="939" width="1080" height="38" as="geometry"/>
+                </mxCell>
+                <mxCell id="note" value="未展开说明    本图聚焦协议栈主干：左分支整车链路（J1939 BAM + E2E + App），右分支诊断链路（ISO15765 + UDS）。未展开DID明细、例程细节、Flash持久化。详见参考说明文档。" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#fffde7;strokeColor=#f9a825;fontColor=#4e342e;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="991" width="1080" height="46" as="geometry"/>
+                </mxCell>
+                <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#00acc1;exitX=-0.003;exitY=0.749;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="uds_table" target="uds_services" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1785" y="451"/>
+                            <mxPoint x="1746" y="451"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

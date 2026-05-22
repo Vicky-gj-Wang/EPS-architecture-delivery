@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EPS交付物导航与预览</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --panel: #ffffff;
+      --ink: #1f2430;
+      --sub: #5b6472;
+      --line: #dbe1ec;
+      --brand: #1e3a8a;
+      --brand-soft: #e8eeff;
+      --accent: #0f766e;
+      --warn: #b45309;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(1200px 700px at 80% -10%, #dbeafe 0%, var(--bg) 45%);
+      color: var(--ink);
+    }
+
+    .app {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 14px;
+      padding: 14px;
+    }
+
+    .sidebar,
+    .main {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(24, 39, 75, 0.06);
+      overflow: hidden;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      min-width: 280px;
+    }
+
+    .side-header {
+      padding: 16px 14px 12px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, #eef2ff 0%, #ecfeff 100%);
+    }
+
+    .side-title {
+      margin: 0;
+      font-size: 18px;
+      color: #0f172a;
+    }
+
+    .side-sub {
+      margin-top: 6px;
+      color: var(--sub);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .mode-tip {
+      margin-top: 10px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--warn);
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 8px;
+      display: none;
+    }
+
+    .nav {
+      padding: 10px;
+      overflow: auto;
+    }
+
+    .cat {
+      margin-bottom: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fcfdff;
+    }
+
+    .cat-btn {
+      width: 100%;
+      border: none;
+      background: #f8faff;
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cat-btn:hover {
+      background: #f1f5ff;
+    }
+
+    .cat-list {
+      list-style: none;
+      margin: 0;
+      padding: 6px;
+      display: none;
+      max-height: 360px;
+      overflow: auto;
+    }
+
+    .cat.open .cat-list {
+      display: block;
+    }
+
+    .item-btn {
+      width: 100%;
+      border: 1px solid transparent;
+      background: #fff;
+      color: #1f2937;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      padding: 8px;
+      margin: 4px 0;
+      font-size: 12px;
+      line-height: 1.35;
+      transition: 0.2s;
+    }
+
+    .item-btn:hover {
+      background: #f6f9ff;
+      border-color: #d6e2ff;
+    }
+
+    .item-btn.active {
+      background: var(--brand-soft);
+      border-color: #a9bfff;
+      color: #0f2d7a;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .badge.drawio {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .badge.md {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge.overview {
+      background: #ede9fe;
+      color: #5b21b6;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .toolbar {
+      border-bottom: 1px solid var(--line);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #fbfcff;
+    }
+
+    .meta {
+      min-width: 0;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 16px;
+      color: #0f172a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .path {
+      margin-top: 3px;
+      color: var(--sub);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      text-decoration: none;
+      color: #0f2d7a;
+      border: 1px solid #bfd2ff;
+      background: #eff4ff;
+      border-radius: 8px;
+      font-size: 12px;
+      padding: 7px 10px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #dde8ff;
+    }
+
+    .btn.disabled {
+      opacity: 0.8;
+      border-color: #fbcfe8;
+      background: #fff1f2;
+      color: #9f1239;
+    }
+
+    .viewer {
+      flex: 1;
+      min-height: 0;
+      background: #fff;
+      position: relative;
+    }
+
+    #drawioFrame,
+    #fileFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none;
+    }
+
+    #mdView {
+      display: none;
+      height: 100%;
+      overflow: auto;
+      padding: 22px 26px;
+      line-height: 1.7;
+      color: #1f2937;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    }
+
+    #mdView h1,
+    #mdView h2,
+    #mdView h3 {
+      margin-top: 24px;
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+
+    #mdView p,
+    #mdView li {
+      font-size: 14px;
+    }
+
+    #mdView code {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 1px 6px;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+    }
+
+    #mdView pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 14px;
+      border-radius: 8px;
+      overflow: auto;
+    }
+
+    #mdView table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 14px 0;
+      font-size: 13px;
+    }
+
+    #mdView th,
+    #mdView td {
+      border: 1px solid #dbe1ec;
+      padding: 7px 8px;
+      text-align: left;
+    }
+
+    #mdView th {
+      background: #f1f5ff;
+    }
+
+    .svg-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0 12px;
+      flex-wrap: wrap;
+    }
+
+    .svg-zoom-btn {
+      border: 1px solid #c7d2fe;
+      background: #eef2ff;
+      color: #1e3a8a;
+      border-radius: 6px;
+      font-size: 12px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    .svg-zoom-btn:hover {
+      background: #dbe4ff;
+    }
+
+    .svg-zoom-label {
+      font-size: 12px;
+      color: #475569;
+      min-width: 58px;
+    }
+
+    .svg-stage {
+      border: 1px solid #dbe1ec;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.06);
+      overflow: auto;
+      max-height: calc(100vh - 290px);
+      background: #fff;
+    }
+
+    .svg-preview-img {
+      display: block;
+      transform-origin: top left;
+      max-width: none;
+      width: auto;
+      height: auto;
+    }
+
+    .empty {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #64748b;
+      padding: 30px;
+    }
+
+    .empty-card {
+      max-width: 620px;
+      border: 1px dashed #c7d2fe;
+      background: #f8faff;
+      padding: 24px;
+      border-radius: 12px;
+      animation: fadeIn 0.45s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+      }
+
+      .sidebar {
+        max-height: 46vh;
+      }
+
+      .toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="side-header">
+        <h1 class="side-title">EPS 交付物导航</h1>
+        <div class="side-sub">左侧选分类与文件，右侧稳定预览（svg / md）</div>
+        <div id="fileModeTip" class="mode-tip">
+          当前是 file:// 直接打开模式。MD可预览；drawio内嵌预览可能受浏览器限制。
+          建议在本目录执行: <code>python -m http.server 8080</code>，然后访问 <code>http://localhost:8080</code>。
+        </div>
+      </div>
+      <nav id="nav" class="nav"></nav>
+    </aside>
+
+    <main class="main">
+      <div class="toolbar">
+        <div class="meta">
+          <h2 id="docTitle" class="title">请选择左侧文件</h2>
+          <div id="docPath" class="path">尚未选择文件</div>
+        </div>
+        <div class="actions">
+          <a id="openRaw" class="btn" target="_blank" rel="noopener noreferrer">新标签打开</a>
+          <a id="openStable" class="btn" target="_blank" rel="noopener noreferrer" style="display:none;">稳定预览(SVG)</a>
+          <a id="openViewer" class="btn" target="_blank" rel="noopener noreferrer" style="display:none;">在 diagrams.net 查看</a>
+        </div>
+      </div>
+
+      <div class="viewer">
+        <iframe id="drawioFrame" title="drawio preview"></iframe>
+        <iframe id="fileFrame" title="fallback preview"></iframe>
+        <article id="mdView"></article>
+
+        <div id="empty" class="empty">
+          <div class="empty-card">
+            <h3>可视化交付物预览中心</h3>
+            <p>点击左侧分类后可直接查看流程图与参考文档，无需单独下载文件。</p>
+            <p>说明: 流程图统一走 SVG 稳定预览；md 文件由页面直接渲染。</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const categories = [
+      {
+        id: 'overview',
+        name: '00 项目与交付总览',
+        items: [
+          { title: '项目总览', type: 'overview' }
+        ]
+      },
+      {
+        id: 'arch',
+        name: '01 系统架构基础',
+        items: [
+          { title: '软件分层架构图', file: 'EPS软件分层架构图_纵向泳道版.drawio', type: 'drawio' },
+          { title: '软件分层架构设计说明', file: 'EPS软件分层架构图设计说明.md', type: 'md' },
+          { title: '模块依赖关系图', file: 'EPS_模块依赖关系图.drawio', type: 'drawio' },
+          { title: '模块依赖关系图参考说明', file: 'EPS_模块依赖关系图_参考说明.md', type: 'md' }
+        ]
+      },
+      {
+        id: 'sm',
+        name: '02 核心状态机',
+        items: [
+          { title: '主状态机流程图', file: 'EPS主状态机流程图_事件表版.drawio', type: 'drawio' },
+          { title: '中断状态机流程图', file: 'EPS中断状态机流程图_事件表版.drawio', type: 'drawio' }
+        ]
+      },
+      {
+        id: 'control',
+        name: '03 控制系统设计',
+        items: [
+          { title: '三环闭环数据流图', file: 'EPS三环闭环数据流图_纵向泳道版.drawio', type: 'drawio' },
+          { title: '电流控制线数据流图', file: 'EPS电流控制线数据流图.drawio', type: 'drawio' },
+          { title: '位置传感器解算数据流图', file: 'EPS位置传感器解算数据流图.drawio', type: 'drawio' },
+          { title: '位置传感器解算参考说明', file: 'EPS位置传感器解算数据流图_参考说明.md', type: 'md' }
+        ]
+      },
+      {
+        id: 'sched',
+        name: '04 调度与时序',
+        items: [
+          { title: '调度时序图完整版', file: 'EPS调度时序图_完整版.drawio', type: 'drawio' },
+          { title: '系统调度时序分析总结', file: 'EPS系统调度时序分析_总结.md', type: 'md' },
+          { title: '系统启动初始化流程图', file: 'EPS系统启动初始化流程图.drawio', type: 'drawio' }
+        ]
+      },
+      {
+        id: 'topic',
+        name: '05 专题深入',
+        items: [
+          { title: 'ADC采样链路专题图', file: 'EPS_ADC采样链路专题图.drawio', type: 'drawio' },
+          { title: 'ADC采样链路参考说明', file: 'EPS_ADC采样链路专题图_参考说明.md', type: 'md' },
+          { title: 'ADC寄存器配置专题图', file: 'EPS_ADC寄存器配置专题图.drawio', type: 'drawio' },
+          { title: 'ADC寄存器配置参考说明', file: 'EPS_ADC寄存器配置专题图_参考说明.md', type: 'md' },
+          { title: '安全保护链路流程图', file: 'EPS安全保护链路流程图.drawio', type: 'drawio' },
+          { title: '安全保护链路参考说明', file: 'EPS安全保护链路流程图_参考说明.md', type: 'md' },
+          { title: '标定数据管理流程图', file: 'EPS标定数据管理流程图.drawio', type: 'drawio' },
+          { title: '标定数据管理参考说明', file: 'EPS标定数据管理流程图_参考说明.md', type: 'md' }
+        ]
+      },
+      {
+        id: 'comm',
+        name: '06 接口与通信',
+        items: [
+          { title: 'ASW接口层流程图', file: 'EPSASW接口层流程图.drawio', type: 'drawio' },
+          { title: 'ASW接口层参考说明', file: 'EPSASW接口层流程图_参考说明.md', type: 'md' },
+          { title: '通信协议栈流程图', file: 'EPS通信协议栈流程图.drawio', type: 'drawio' },
+          { title: '通信协议栈参考说明', file: 'EPS通信协议栈流程图_参考说明.md', type: 'md' },
+          { title: 'UDS参数流程专题图', file: 'EPS_UDS参数流程专题图.drawio', type: 'drawio' },
+          { title: 'UDS参数流程参考说明', file: 'EPS_UDS参数流程专题图_参考说明.md', type: 'md' },
+          { title: 'XCP标定持久化专题图', file: 'EPS_XCP标定持久化专题图.drawio', type: 'drawio' },
+          { title: 'XCP标定持久化参考说明', file: 'EPS_XCP标定持久化专题图_参考说明.md', type: 'md' }
+        ]
+      },
+      {
+        id: 'extra',
+        name: '07 补充参考',
+        items: [
+          { title: '架构图代码比对分析总结', file: 'EPS架构图_代码比对分析总结.md', type: 'md' }
+        ]
+      }
+    ];
+
+    const nav = document.getElementById('nav');
+    const drawioFrame = document.getElementById('drawioFrame');
+    const fileFrame = document.getElementById('fileFrame');
+    const mdView = document.getElementById('mdView');
+    const empty = document.getElementById('empty');
+    const docTitle = document.getElementById('docTitle');
+    const docPath = document.getElementById('docPath');
+    const openRaw = document.getElementById('openRaw');
+    const openStable = document.getElementById('openStable');
+    const openViewer = document.getElementById('openViewer');
+    const DRAWIO_EMBED_URL = 'https://embed.diagrams.net/?embed=1&ui=min&spin=1&proto=json';
+    let drawioLoadToken = 0;
+    let svgZoomKeyHandler = null;
+
+    const isFileProtocol = window.location.protocol === 'file:';
+    if (isFileProtocol) {
+      document.getElementById('fileModeTip').style.display = 'block';
+    }
+
+    function toAbsoluteUrl(path) {
+      return new URL(path, window.location.href).href;
+    }
+
+    function drawioViewerUrl(path, title) {
+      const abs = toAbsoluteUrl(path);
+      return `https://app.diagrams.net/?lightbox=1&nav=1&title=${encodeURIComponent(title)}&layers=1&highlight=0000ff&edit=_blank&url=${encodeURIComponent(abs)}`;
+    }
+
+    function drawioToSvgPath(path) {
+      return path.replace(/\.drawio$/i, '.svg');
+    }
+
+    function setStableButtonNormal(svgPath) {
+      openStable.textContent = '稳定预览(SVG)';
+      openStable.classList.remove('disabled');
+      openStable.href = svgPath;
+      openStable.title = `打开 ${svgPath}`;
+    }
+
+    function setStableButtonFallback(viewerUrl, svgPath) {
+      openStable.textContent = 'SVG缺失(改用在线)';
+      openStable.classList.add('disabled');
+      openStable.href = viewerUrl;
+      openStable.title = `未找到 ${svgPath}，已回退到 diagrams.net 在线预览`;
+    }
+
+    function normalizeMessageData(data) {
+      if (typeof data === 'string') {
+        try {
+          return JSON.parse(data);
+        } catch (_err) {
+          return null;
+        }
+      }
+      return data;
+    }
+
+    function renderOverview() {
+      const totalCategories = categories.filter(c => c.id !== 'overview').length;
+      const totalItems = categories
+        .filter(c => c.id !== 'overview')
+        .reduce((sum, c) => sum + c.items.length, 0);
+
+      const drawioCount = categories
+        .flatMap(c => c.items)
+        .filter(i => i.type === 'drawio').length;
+      const mdCount = categories
+        .flatMap(c => c.items)
+        .filter(i => i.type === 'md').length;
+
+      return `
+        <h1>EPS 项目总览</h1>
+        <p>该交付集合围绕 EPS 电机控制软件展开，目标是支持内部开发交接、架构评审与问题定位。导航按“架构总览 → 状态机 → 控制链路 → 调度时序 → 专题深入 → 接口通信”组织，便于从全局到细节逐层阅读。</p>
+
+        <h2>项目范围</h2>
+        <ul>
+          <li>平台与系统: Infineon TC233 + ErikaOS 调度框架</li>
+          <li>核心分层: 0_App → 2_SRVSW → 4_BSP → 5_LLD</li>
+          <li>重点链路: 主/中断状态机、三环控制、ADC采样、安全保护、UDS/XCP/标定持久化</li>
+        </ul>
+
+        <h2>交付覆盖概览</h2>
+        <table>
+          <thead>
+            <tr><th>指标</th><th>数量</th><th>说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>分类数</td><td>${totalCategories}</td><td>左侧 01~07 结构化分类</td></tr>
+            <tr><td>总条目</td><td>${totalItems}</td><td>当前导航可直接预览的交付项</td></tr>
+            <tr><td>流程图(drawio)</td><td>${drawioCount}</td><td>架构图、流程图、数据流图等</td></tr>
+            <tr><td>说明文档(md)</td><td>${mdCount}</td><td>配套参考说明与分析总结</td></tr>
+          </tbody>
+        </table>
+
+        <h2>建议阅读路径</h2>
+        <ol>
+          <li>先看 01 系统架构基础，建立全局模块关系</li>
+          <li>再看 02+03，理解状态机与控制主链</li>
+          <li>最后看 04+05+06，按专题深入并补齐接口细节</li>
+        </ol>
+      `;
+    }
+
+    function renderDrawioXml(xmlText, titleText) {
+      drawioLoadToken += 1;
+      const thisLoadToken = drawioLoadToken;
+      let loaded = false;
+      let timeoutId;
+
+      drawioFrame.style.display = 'block';
+
+      const onMessage = (evt) => {
+        if (evt.origin !== 'https://embed.diagrams.net') {
+          return;
+        }
+
+        if (thisLoadToken !== drawioLoadToken) {
+          window.removeEventListener('message', onMessage);
+          return;
+        }
+
+        const msg = normalizeMessageData(evt.data);
+        if (!msg) {
+          return;
+        }
+
+        if (msg.event === 'configure') {
+          const cfg = {
+            action: 'configure',
+            config: {
+              css: '',
+              defaultLibraries: 'general;flowchart'
+            }
+          };
+          drawioFrame.contentWindow.postMessage(JSON.stringify(cfg), 'https://embed.diagrams.net');
+          return;
+        }
+
+        if (msg.event !== 'init') {
+          return;
+        }
+
+        const payload = {
+          action: 'load',
+          xml: xmlText,
+          title: titleText,
+          autosave: 0,
+          modified: 'unsavedChanges'
+        };
+
+        drawioFrame.contentWindow.postMessage(JSON.stringify(payload), 'https://embed.diagrams.net');
+        loaded = true;
+        clearTimeout(timeoutId);
+        window.removeEventListener('message', onMessage);
+      };
+
+      window.addEventListener('message', onMessage);
+      drawioFrame.src = DRAWIO_EMBED_URL;
+
+      timeoutId = setTimeout(() => {
+        if (loaded || thisLoadToken !== drawioLoadToken) {
+          return;
+        }
+        window.removeEventListener('message', onMessage);
+        drawioFrame.style.display = 'none';
+        mdView.style.display = 'block';
+        mdView.innerHTML = `
+          <h2>drawio 内嵌预览超时</h2>
+          <p>浏览器未完成与 <code>embed.diagrams.net</code> 的通信，通常由网络策略、插件拦截或企业安全策略引起。</p>
+          <p>可先点击右上角“在 diagrams.net 查看”确认文件本身正常；若可打开，则是浏览器内嵌限制问题。</p>
+          <p>建议尝试：关闭广告拦截插件、使用 Edge/Chrome 无痕窗口、或更换网络后重试。</p>
+          <p><a href="${openViewer.href}" target="_blank" rel="noopener noreferrer">点这里在新标签打开 diagrams.net（兜底）</a></p>
+        `;
+      }, 8000);
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function parseMarkdown(md) {
+      let html = escapeHtml(md);
+
+      html = html.replace(/^###\s+(.+)$/gm, '<h3>$1</h3>');
+      html = html.replace(/^##\s+(.+)$/gm, '<h2>$1</h2>');
+      html = html.replace(/^#\s+(.+)$/gm, '<h1>$1</h1>');
+
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+      html = html.replace(/```([\s\S]*?)```/g, (_, code) => `<pre><code>${code.trim()}</code></pre>`);
+
+      const lines = html.split('\n');
+      let out = [];
+      let inUl = false;
+      let inOl = false;
+
+      for (const line of lines) {
+        if (/^\s*[-*]\s+/.test(line)) {
+          if (!inUl) {
+            if (inOl) {
+              out.push('</ol>');
+              inOl = false;
+            }
+            out.push('<ul>');
+            inUl = true;
+          }
+          out.push(`<li>${line.replace(/^\s*[-*]\s+/, '')}</li>`);
+          continue;
+        }
+
+        if (/^\s*\d+\.\s+/.test(line)) {
+          if (!inOl) {
+            if (inUl) {
+              out.push('</ul>');
+              inUl = false;
+            }
+            out.push('<ol>');
+            inOl = true;
+          }
+          out.push(`<li>${line.replace(/^\s*\d+\.\s+/, '')}</li>`);
+          continue;
+        }
+
+        if (inUl) {
+          out.push('</ul>');
+          inUl = false;
+        }
+        if (inOl) {
+          out.push('</ol>');
+          inOl = false;
+        }
+
+        if (/^\|.+\|$/.test(line)) {
+          out.push(`<p>${line}</p>`);
+        } else if (line.trim() === '') {
+          out.push('');
+        } else if (/^<h[1-3]>/.test(line) || /^<pre>/.test(line)) {
+          out.push(line);
+        } else {
+          out.push(`<p>${line}</p>`);
+        }
+      }
+
+      if (inUl) out.push('</ul>');
+      if (inOl) out.push('</ol>');
+
+      return out.join('\n');
+    }
+
+    function clearViews() {
+      if (svgZoomKeyHandler) {
+        window.removeEventListener('keydown', svgZoomKeyHandler, { capture: true });
+        svgZoomKeyHandler = null;
+      }
+      drawioFrame.style.display = 'none';
+      fileFrame.style.display = 'none';
+      mdView.style.display = 'none';
+      empty.style.display = 'none';
+      drawioFrame.src = 'about:blank';
+      fileFrame.src = 'about:blank';
+      mdView.innerHTML = '';
+    }
+
+    function setupSvgZoomControls() {
+      const stage = mdView.querySelector('.svg-stage');
+      const img = mdView.querySelector('.svg-preview-img');
+      const label = mdView.querySelector('.svg-zoom-label');
+      const btnIn = mdView.querySelector('[data-zoom="in"]');
+      const btnOut = mdView.querySelector('[data-zoom="out"]');
+      const btnReset = mdView.querySelector('[data-zoom="reset"]');
+
+      if (!stage || !img || !label) {
+        return;
+      }
+
+      let zoom = 1;
+
+      const applyZoom = () => {
+        img.style.transform = `scale(${zoom})`;
+        label.textContent = `${Math.round(zoom * 100)}%`;
+      };
+
+      const stepZoom = (delta) => {
+        const next = Math.max(0.2, Math.min(4, zoom + delta));
+        zoom = Number(next.toFixed(2));
+        applyZoom();
+      };
+
+      btnIn?.addEventListener('click', () => stepZoom(0.1));
+      btnOut?.addEventListener('click', () => stepZoom(-0.1));
+      btnReset?.addEventListener('click', () => {
+        zoom = 1;
+        applyZoom();
+      });
+
+      stage.addEventListener('wheel', (evt) => {
+        if (!evt.ctrlKey) {
+          return;
+        }
+        evt.preventDefault();
+        stepZoom(evt.deltaY < 0 ? 0.1 : -0.1);
+      }, { passive: false });
+
+      svgZoomKeyHandler = (evt) => {
+        const hasSvgPreview = mdView.style.display === 'block' && mdView.querySelector('.svg-preview-img');
+        if (!hasSvgPreview || !evt.ctrlKey) {
+          return;
+        }
+
+        const key = evt.key;
+        if (key === '+' || key === '=') {
+          evt.preventDefault();
+          stepZoom(0.1);
+        } else if (key === '-' || key === '_') {
+          evt.preventDefault();
+          stepZoom(-0.1);
+        } else if (key === '0') {
+          evt.preventDefault();
+          zoom = 1;
+          applyZoom();
+        }
+      };
+
+      window.addEventListener('keydown', svgZoomKeyHandler, { capture: true });
+      applyZoom();
+    }
+
+    async function openItem(item, button) {
+      document.querySelectorAll('.item-btn').forEach(el => el.classList.remove('active'));
+      if (button) button.classList.add('active');
+
+      docTitle.textContent = item.title;
+      docPath.textContent = item.file || '内置总览页';
+      openRaw.href = item.file || '#';
+      openRaw.textContent = '新标签打开';
+
+      clearViews();
+
+      if (item.type === 'overview') {
+        openRaw.style.display = 'none';
+        openStable.style.display = 'none';
+        openViewer.style.display = 'none';
+        mdView.innerHTML = renderOverview();
+        mdView.style.display = 'block';
+        return;
+      }
+
+      openRaw.style.display = 'inline-block';
+
+      if (item.type === 'drawio') {
+        const stableSvg = drawioToSvgPath(item.file);
+        openStable.style.display = 'none';
+        openViewer.style.display = 'none';
+        openRaw.textContent = '打开SVG';
+        openRaw.href = stableSvg;
+
+        try {
+          const svgRes = await fetch(stableSvg, { cache: 'no-store' });
+          if (!svgRes.ok) throw new Error(`HTTP ${svgRes.status}`);
+
+          mdView.style.display = 'block';
+          mdView.innerHTML = `
+            <h2>${escapeHtml(item.title)}（稳定预览）</h2>
+            <p>当前展示为同名 SVG，默认不可编辑。</p>
+            <div class="svg-toolbar">
+              <button class="svg-zoom-btn" data-zoom="out">- 缩小</button>
+              <button class="svg-zoom-btn" data-zoom="in">+ 放大</button>
+              <button class="svg-zoom-btn" data-zoom="reset">重置</button>
+              <span class="svg-zoom-label">100%</span>
+              <span class="svg-zoom-label">快捷键: Ctrl + / - / 0</span>
+            </div>
+            <div class="svg-stage">
+              <img class="svg-preview-img" src="${escapeHtml(stableSvg)}" alt="${escapeHtml(item.title)}" />
+            </div>
+          `;
+          setupSvgZoomControls();
+        } catch (err) {
+          mdView.style.display = 'block';
+          mdView.innerHTML = `
+            <h2>SVG 预览失败</h2>
+            <p>未找到同名 SVG：<code>${escapeHtml(stableSvg)}</code></p>
+            <p>错误信息：<code>${escapeHtml(String(err))}</code></p>
+            <p>请先导出同名 SVG 后重试。</p>
+          `;
+        }
+        return;
+      }
+
+      openStable.style.display = 'none';
+      openViewer.style.display = 'none';
+
+      if (item.type === 'md') {
+        try {
+          const res = await fetch(item.file, { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const mdText = await res.text();
+          mdView.innerHTML = parseMarkdown(mdText);
+          mdView.style.display = 'block';
+        } catch (err) {
+          mdView.style.display = 'block';
+          mdView.innerHTML = `
+            <h2>预览失败</h2>
+            <p>无法直接读取该 Markdown 文件：<code>${escapeHtml(String(err))}</code></p>
+            <p>可点击右上角“新标签打开”。如果你是 file:// 模式，建议启用本地HTTP服务后重试。</p>
+          `;
+        }
+      }
+    }
+
+    function renderNav() {
+      nav.innerHTML = '';
+
+      categories.forEach((cat, idx) => {
+        const wrap = document.createElement('section');
+        wrap.className = 'cat' + (idx === 0 ? ' open' : '');
+
+        const btn = document.createElement('button');
+        btn.className = 'cat-btn';
+        btn.innerHTML = `<span>${cat.name}</span><span>${cat.items.length}</span>`;
+        btn.addEventListener('click', () => wrap.classList.toggle('open'));
+
+        const list = document.createElement('ul');
+        list.className = 'cat-list';
+
+        cat.items.forEach((item, itemIndex) => {
+          const li = document.createElement('li');
+          const itemBtn = document.createElement('button');
+          itemBtn.className = 'item-btn';
+          itemBtn.innerHTML = `<span class="badge ${item.type}">${item.type.toUpperCase()}</span>${item.title}`;
+          itemBtn.addEventListener('click', () => openItem(item, itemBtn));
+          li.appendChild(itemBtn);
+          list.appendChild(li);
+
+          if (idx === 0 && itemIndex === 0) {
+            setTimeout(() => openItem(item, itemBtn), 0);
+          }
+        });
+
+        wrap.appendChild(btn);
+        wrap.appendChild(list);
+        nav.appendChild(wrap);
+      });
+    }
+
+    renderNav();
+  </script>
+</body>
+</html>

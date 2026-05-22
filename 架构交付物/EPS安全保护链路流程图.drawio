@@ -1,0 +1,127 @@
+<mxfile host="65bd71144e">
+    <diagram id="eps_protect_chain_v1" name="EPS安全保护链路流程图">
+        <mxGraphModel dx="854" dy="410" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1300" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title_top" value="EPS 安全保护链路流程图" style="text;strokeColor=none;fillColor=none;align=center;fontSize=18;fontStyle=1;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="510" y="14" width="560" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="entry_header" value="异常入口分支（四入口细化）" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=12;fontStyle=1;fillColor=#f8bbd0;strokeColor=#e91e63;fontColor=#d32f2f;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="80" width="300" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="in_trap" value="TrapHandle 异常（OS protection/time/stack）" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#fce4ec;strokeColor=#e91e63;fontColor=#d32f2f;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="170" width="400" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="in_protect" value="protect.c 保护触发（过压/过流/过温/预驱故障）" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#fce4ec;strokeColor=#e91e63;fontColor=#d32f2f;" parent="1" vertex="1">
+                    <mxGeometry x="580" y="170" width="400" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="in_selftest" value="StateInit 中 SelfTestRun 失败" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#fce4ec;strokeColor=#e91e63;fontColor=#d32f2f;" parent="1" vertex="1">
+                    <mxGeometry x="1030" y="170" width="360" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="in_powermanager" value="PowerManager 触发保护（电源异常/降级保护）" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#fce4ec;strokeColor=#e91e63;fontColor=#d32f2f;" vertex="1" parent="1">
+                    <mxGeometry x="1430" y="170" width="300" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="merge" value="故障汇聚与仲裁（进入 FaultState）" style="rhombus;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#fce4ec;strokeColor=#e91e63;fontColor=#d32f2f;" parent="1" vertex="1">
+                    <mxGeometry x="650" y="300" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="reset_limit" value="ResetCount &gt;= MAX_SOFTWARERESET_COUNT?" style="rhombus;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#fff9c4;strokeColor=#f9a825;fontColor=#d32f2f;" parent="1" vertex="1">
+                    <mxGeometry x="635" y="460" width="290" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="reset_call" value="ControllerSoftwareResetWithLimit" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#fff9c4;strokeColor=#f9a825;fontColor=#4e342e;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="640" width="320" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="sw_reset" value="IfxCpu_triggerSwReset" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="726" width="320" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="reboot" value="重启后返回启动入口" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#fffde7;strokeColor=#f9a825;fontColor=#4e342e;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="812" width="320" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="latch" value="置位 ResetOverCount 故障并保持 FaultState" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#fff3e0;strokeColor=#f5a623;fontColor=#d32f2f;" parent="1" vertex="1">
+                    <mxGeometry x="1030" y="650" width="420" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="wait_clear" value="等待 UDS/FaultClear 或人工恢复" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#e8eaf6;strokeColor=#5c6bc0;fontColor=#283593;" parent="1" vertex="1">
+                    <mxGeometry x="1030" y="736" width="420" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="retry" value="故障清除后回 StateInit 重试" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#e8f5e9;strokeColor=#43a047;fontColor=#1b5e20;" parent="1" vertex="1">
+                    <mxGeometry x="1030" y="822" width="420" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="diag_report" value="故障码上报通道（AppCom/UDS）" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#e8eaf6;strokeColor=#5c6bc0;fontColor=#283593;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="650" width="380" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="diag_cfg" value="DTC 分级映射（LEVEL_A/B/C）" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#e8eaf6;strokeColor=#5c6bc0;fontColor=#283593;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="736" width="380" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#e91e63;" parent="1" source="in_trap" target="merge" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="290" y="270"/>
+                            <mxPoint x="780" y="270"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#e91e63;" parent="1" source="in_protect" target="merge" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#e91e63;" parent="1" source="in_selftest" target="merge" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1150" y="270"/>
+                            <mxPoint x="780" y="270"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#e91e63;entryX=0.975;entryY=0.508;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="in_powermanager" target="merge">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1580" y="361"/>
+                        </Array>
+                        <mxPoint x="1140" y="270" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#e91e63;" parent="1" source="merge" target="reset_limit" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e5" value="否" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;fontColor=#f9a825;fontSize=9;" parent="1" source="reset_limit" target="reset_call" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e6" value="是" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;fontColor=#f9a825;fontSize=9;" parent="1" source="reset_limit" target="latch" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1240" y="525"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;" parent="1" source="reset_call" target="sw_reset" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;" parent="1" source="sw_reset" target="reboot" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#5c6bc0;" parent="1" source="latch" target="wait_clear" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#43a047;" parent="1" source="wait_clear" target="retry" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e11" value="故障状态同步" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;dashed=1;strokeColor=#5c6bc0;fontColor=#5c6bc0;fontSize=9;" parent="1" target="diag_report" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="350" y="440"/>
+                        </Array>
+                        <mxPoint x="780" y="440" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#5c6bc0;" parent="1" source="diag_report" target="diag_cfg" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="note" value="未展开说明 本图聚焦保护链路主干（四入口 汇聚 复位仲裁 复位执行 恢复路径）。未展开对象包括各单项故障判据细节、各 DTC 诊断细目和完整通信帧时序。未展开原因为避免连线交叉并保持主阅读路径清晰；详细内容见通信协议栈流程图与诊断配置表。" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#fffde7;strokeColor=#f9a825;fontColor=#4e342e;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="972" width="1660" height="76" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend" value="图例 实线表示控制动作链路 虚线表示状态同步或旁路信息链路" style="text;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="1060" width="760" height="22" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

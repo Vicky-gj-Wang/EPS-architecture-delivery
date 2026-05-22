@@ -1,0 +1,215 @@
+<mxfile host="65bd71144e">
+    <diagram id="xlgkc0S0Wn6H5y_vjkV0" name="Page-1">
+        <mxGraphModel dx="2900" dy="419" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="EPS 电流控制线数据流图（Layer 3）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="427" y="20" width="800" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="subtitle" value="执行周期：电流环 100μs（FOC PWM ISR）｜速度环 1ms（ISR内分频×10）｜位置环 5ms（ISR内分频×50）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="327" y="58" width="1000" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="col1_hdr" value="&lt;b&gt;FOC PWM ISR（100μs）&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#555&#39;&gt;每个 PWM 中断必执行&lt;/font&gt;" style="rounded=1;fillColor=#1565C0;strokeColor=#0D47A1;fontColor=#ffffff;fontSize=12;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="95" width="500" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="col2_hdr" value="&lt;b&gt;速度环（1ms = 每10次ISR执行1次）&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#eee&#39;&gt;SpeedLoopCntr 计数器分频&lt;/font&gt;" style="rounded=1;fillColor=#2E7D32;strokeColor=#1B5E20;fontColor=#ffffff;fontSize=12;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="95" width="400" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="col3_hdr" value="&lt;b&gt;位置环（5ms = 每50次ISR执行1次）&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px;color:#eee&#39;&gt;PostionLoopCntr 计数器分频&lt;/font&gt;" style="rounded=1;fillColor=#6A1B9A;strokeColor=#4A148C;fontColor=#ffffff;fontSize=12;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="95" width="400" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="col1_bg" value="" style="rounded=0;fillColor=#E3F2FD;strokeColor=#90CAF9;opacity=30;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="155" width="500" height="1320" as="geometry"/>
+                </mxCell>
+                <mxCell id="col2_bg" value="" style="rounded=0;fillColor=#E8F5E9;strokeColor=#A5D6A7;opacity=30;" parent="1" vertex="1">
+                    <mxGeometry x="620" y="155" width="400" height="1320" as="geometry"/>
+                </mxCell>
+                <mxCell id="col3_bg" value="" style="rounded=0;fillColor=#F3E5F5;strokeColor=#CE93D8;opacity=30;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="155" width="400" height="1320" as="geometry"/>
+                </mxCell>
+                <mxCell id="sec1_lbl" value="① ADC 采样" style="text;html=1;strokeColor=none;fillColor=#BBDEFB;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=10;fontStyle=1;fontColor=#1565C0;" parent="1" vertex="1">
+                    <mxGeometry x="88" y="162" width="110" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="sec2_lbl" value="② 电流校准 &amp; 重构" style="text;html=1;strokeColor=none;fillColor=#BBDEFB;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=10;fontStyle=1;fontColor=#1565C0;" parent="1" vertex="1">
+                    <mxGeometry x="88" y="382" width="140" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="sec3_lbl" value="③ Clarke 变换" style="text;html=1;strokeColor=none;fillColor=#BBDEFB;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=10;fontStyle=1;fontColor=#1565C0;" parent="1" vertex="1">
+                    <mxGeometry x="88" y="582" width="120" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="sec4_lbl" value="④ Park 变换" style="text;html=1;strokeColor=none;fillColor=#BBDEFB;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=10;fontStyle=1;fontColor=#1565C0;" parent="1" vertex="1">
+                    <mxGeometry x="88" y="712" width="110" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="sec5_lbl" value="⑤ 电流环 PID" style="text;html=1;strokeColor=none;fillColor=#BBDEFB;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=10;fontStyle=1;fontColor=#1565C0;" parent="1" vertex="1">
+                    <mxGeometry x="88" y="872" width="110" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="sec6_lbl" value="⑥ 反Park + SVPWM + 输出" style="text;html=1;strokeColor=none;fillColor=#BBDEFB;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=10;fontStyle=1;fontColor=#1565C0;" parent="1" vertex="1">
+                    <mxGeometry x="88" y="1092" width="190" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="adc_hw" value="&lt;b&gt;VADC 硬件&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;FOC PWM ISR 触发 ADC 采样&lt;br&gt;通道：CH_CURRENT_A / B / C&lt;br&gt;精度：12-bit（ADC_PRECISION_FACTOR=4096）&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="155" y="190" width="350" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_adc_hw_get" value="Adc_ResultGet( CH_CURRENT_A/B/C )" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="adc_hw" target="adc_raw" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="adc_raw" value="&lt;b&gt;adc.measured.fltPhA/B/C.raw&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;raw = (ADC_count − OOS_count) / 4095 × 3.3V&lt;br&gt;（OOS：运放偏置参考电压）&lt;br&gt;函数：GetCurrentAdcVal()  &lt;i&gt;(AdcApp.c)&lt;/i&gt;&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="155" y="285" width="350" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_raw_calib" value="slope × raw − offset × CalibOffset" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="adc_raw" target="fbck_cur" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fbck_cur" value="&lt;b&gt;FbckCurVal[0/1/2]&lt;/b&gt;（校准后 A 相/B 相/C 相电流，&lt;font color=&#39;#C62828&#39;&gt;单位 A&lt;/font&gt;）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;= fltPhA.raw × slope.fltPhA − offset.fltPhA × CalibOffset[0].fltPhA&lt;br&gt;（IntStateMachine.c 顶层，FOC ISR 入口）&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=11;verticalAlign=middle;html=1;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="130" y="410" width="400" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_fbck_recon" value="扇区选相重构：根据 pwmDutys[] 大小关系，&lt;br&gt;选取两相直采，第三相 = −(Ia + Ib)" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="fbck_cur" target="iAbcFbck" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="iAbcFbck" value="&lt;b&gt;iAbcFbck.fltArg1/2/3&lt;/b&gt;（三相重构电流 Ia, Ib, Ic）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;（IntStateMachine.c，FOC ISR）&lt;br&gt;三相之和恒为零：Ia + Ib + Ic = 0&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="140" y="510" width="380" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_abc_clarke" value="FocCrntLoop() 调用" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="iAbcFbck" target="iAlBeFbck" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="iAlBeFbck" value="&lt;b&gt;iAlBeFbck.fltArg1/2&lt;/b&gt;（Iα, Iβ — 静止坐标系）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;Iα = Ia&lt;br&gt;Iβ = (1/√3) × (Ia + 2×Ib)&lt;br&gt;（foc.c：FocCrntLoop 内）&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="140" y="610" width="380" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="theta_src" value="&lt;b&gt;thTransform.fltArg1/2&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;sin(θ) / cos(θ)，θ = MrElePosition&lt;br&gt;&lt;font color=&#39;#C62828&#39;&gt;代码现状：θ_delay = θ（未做额外延迟补偿）&lt;/font&gt;&lt;br&gt;由 GetRotatrPosition() 在 ISR 顶层更新&lt;br&gt;（MR 传感器解算，位置线提供）&lt;/font&gt;" style="rounded=1;fillColor=#FCE4EC;strokeColor=#C62828;fontSize=10;verticalAlign=middle;html=1;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="700" width="370" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_cur_01" value="MOD-CUR-01" style="text;html=1;strokeColor=#C62828;fillColor=#FFEBEE;align=center;fontSize=8;fontStyle=1;fontColor=#C62828;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="535" y="410" width="80" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_cur_02" value="MOD-CUR-02" style="text;html=1;strokeColor=#C62828;fillColor=#FFEBEE;align=center;fontSize=8;fontStyle=1;fontColor=#C62828;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="1005" y="700" width="80" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_theta_park" value="注入转子角度" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#C62828;fontColor=#C62828;dashed=1;" parent="1" source="theta_src" target="idq_fbck" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_clarke_park" value="FocCrntLoop()" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="iAlBeFbck" target="idq_fbck" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="idq_fbck" value="&lt;b&gt;idPIDCal.Feedback&lt;/b&gt; = Iα·cosθ + Iβ·sinθ&lt;br&gt;&lt;b&gt;iqPIDCal.Feedback&lt;/b&gt; = Iβ·cosθ − Iα·sinθ&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;（foc.c：FocCrntLoop 内）&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="140" y="735" width="380" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="iq_ref_src" value="&lt;b&gt;iqPIDCal.Reference&lt;/b&gt;（力矩电流参考）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;来源：speedPIDCal.Output（速度模式）&lt;br&gt;或 torqCtrl.TorqueMode_IqReq（力矩模式）&lt;br&gt;经 GetIdqFromTorque() 从力矩指令换算&lt;/font&gt;" style="rounded=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="870" width="370" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="id_ref_src" value="&lt;b&gt;idPIDCal.Reference&lt;/b&gt;（磁通电流参考）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;正常：= 0（非弱磁）&lt;br&gt;弱磁时：= FwPIDcal.Output（AutoFluxWeaken）&lt;/font&gt;" style="rounded=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="975" width="370" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_iqref_pid" value="注入参考值（1ms更新）" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#2E7D32;fontColor=#2E7D32;dashed=1;" parent="1" source="iq_ref_src" target="pid_out" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_idref_pid" value="注入参考值（100μs更新）" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.7;entryDx=0;entryDy=0;strokeColor=#2E7D32;fontColor=#2E7D32;dashed=1;" parent="1" source="id_ref_src" target="pid_out" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_fbck_pid" value="AutoFluxWeaken() → ControllerPIDrAW()" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="idq_fbck" target="pid_out" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="pid_out" value="&lt;b&gt;uDQReq.fltArg1/2&lt;/b&gt;（Ud, Uq — 旋转坐标系电压指令）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;d轴：idPIDCal.Output（弱磁控制）&lt;br&gt;q轴：iqPIDCal.Output（力矩控制）&lt;br&gt;输出限幅：√(Ud²+Uq²) ≤ Us（直流母线电压/√3）&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="130" y="900" width="390" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_dq_invpark" value="反Park（θ同步）：Uα=Ud·cosθ−Uq·sinθ" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="pid_out" target="uAlBeReq" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="invpark_box" value="反Park 变换" style="rounded=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;verticalAlign=middle;html=1;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="-13" y="1020" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uAlBeReq" value="&lt;b&gt;uAlBeReq.fltArg1/2&lt;/b&gt;（Uα, Uβ — 静止坐标系电压）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;Uα = Ud·cosθ − Uq·sinθ&lt;br&gt;Uβ = Ud·sinθ + Uq·cosθ&lt;br&gt;（foc.c：FocCrntLoop 内）&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="140" y="1020" width="380" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_invpark_svpwm" value="StdSvpwmCalc()（7段SVPWM）" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="uAlBeReq" target="pwmDutys" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="svpwm_box" value="7段 SVPWM" style="rounded=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;verticalAlign=middle;html=1;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="-8" y="1130" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="pwmDutys" value="&lt;b&gt;pwmDutys[0/1/2]&lt;/b&gt;（U/V/W 三相 PWM 占空比计数值）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;范围：0 ~ iPWMFullCnt（= 10000 计数 @ 100μs）&lt;br&gt;扇区编号：svmSector（0~5）&lt;br&gt;（foc.c：StdSvpwmCalc 输出，IntStateMachine.c 读取）&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="130" y="1130" width="390" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_duty_pwm" value="Pwm_UVWTonSet( pwmDutys[0], pwmDutys[1], pwmDutys[2] )" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="pwmDutys" target="gtm_reg" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gtm_reg" value="&lt;b&gt;GTM 寄存器&lt;/b&gt;（硬件 PWM 输出）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;下一个 PWM 周期生效（延迟 100μs）&lt;br&gt;驱动三相逆变桥，产生电机相电压&lt;/font&gt;" style="rounded=1;fillColor=#B71C1C;strokeColor=#7F0000;fontColor=#ffffff;fontSize=11;verticalAlign=middle;html=1;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="155" y="1240" width="350" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="spd_pos_input" value="&lt;b&gt;positionCtrl.SpeedInCtrl&lt;/b&gt;（实际速度）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;由 GetRotatrPosition() 计算&lt;br&gt;位置差分 → 机械转速（rpm）&lt;/font&gt;" style="rounded=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="635" y="190" width="370" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="spd_ref_input" value="&lt;b&gt;positionCtrl.SpeedInCtrl_Req&lt;/b&gt;（目标速度）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;来自位置环输出（位置模式）&lt;br&gt;或 ASW 直接写入（速度模式）&lt;/font&gt;" style="rounded=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="635" y="280" width="370" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_spd_pid" value="SpeedLoop()  每10次ISR（1ms）" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#2E7D32;fontColor=#2E7D32;" parent="1" source="spd_ref_input" target="spd_pid_out" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="spd_pid_out" value="&lt;b&gt;speedPIDCal.Output&lt;/b&gt;（力矩指令 / Iq参考）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;ControllerPIDrAW(&amp;speedPIDCal)&lt;br&gt;（control.c：Err=SpeedReq−SpeedFbc，积分+比例）&lt;br&gt;输出限幅：torqCtrl.Speed_limit.max/min&lt;/font&gt;" style="rounded=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="370" width="380" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_spd_iqref" value="1ms 写入 iqPIDCal.Reference" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#2E7D32;fontColor=#2E7D32;" parent="1" source="spd_pid_out" target="iq_ref_src" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="820" y="680"/>
+                            <mxPoint x="1010" y="680"/>
+                            <mxPoint x="1010" y="820"/>
+                            <mxPoint x="815" y="820"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="pos_input" value="&lt;b&gt;positionCtrl.MechPositionInCtrl&lt;/b&gt;（实际位置）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;由 GetRotatrPosition() 在 ISR 顶层更新&lt;br&gt;单位：圈数（revolution）&lt;/font&gt;" style="rounded=1;fillColor=#F3E5F5;strokeColor=#6A1B9A;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1075" y="190" width="370" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="pos_ref_input" value="&lt;b&gt;positionCtrl.MechPositionInCtrl_Req&lt;/b&gt;（目标位置）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;来自 ASW：SetTgtValue_Hw() / asw_position.c&lt;br&gt;或上层整车指令（CAN解析后写入）&lt;/font&gt;" style="rounded=1;fillColor=#F3E5F5;strokeColor=#6A1B9A;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1075" y="280" width="370" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_pos_pid" value="PositionLoop()  每50次ISR（5ms）" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#6A1B9A;fontColor=#6A1B9A;" parent="1" source="pos_ref_input" target="pos_pid_out" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="pos_pid_out" value="&lt;b&gt;positionPIDcal.Output&lt;/b&gt;（速度指令）&lt;br&gt;&lt;font style=&#39;font-size:10px&#39;&gt;ControllerPIDrAW(&amp;positionPIDcal)&lt;br&gt;（control.c：Err=PosReq−PosFbc，积分+比例）&lt;br&gt;输出→ SpeedInCtrl_Req（速度环参考值）&lt;/font&gt;" style="rounded=1;fillColor=#F3E5F5;strokeColor=#6A1B9A;fontSize=11;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1075" y="370" width="380" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="arr_pos_spd" value="5ms 写入 SpeedInCtrl_Req" style="edgeStyle=orthogonalEdgeStyle;fontSize=10;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6A1B9A;fontColor=#6A1B9A;" parent="1" source="pos_pid_out" target="spd_ref_input" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend_title" value="图例" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1490" y="200" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg1" value="关键数据字段" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1490" y="228" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg2" value="变换/算法节点" style="rounded=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1490" y="268" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg3" value="速度环输入/输出" style="rounded=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1490" y="308" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg4" value="位置环输入/输出" style="rounded=1;fillColor=#F3E5F5;strokeColor=#6A1B9A;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1490" y="348" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg5" value="位置传感器注入" style="rounded=1;fillColor=#FCE4EC;strokeColor=#C62828;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1490" y="388" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg6" value="PWM 硬件输出" style="rounded=1;fillColor=#B71C1C;strokeColor=#7F0000;fontColor=#ffffff;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1490" y="428" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg_solid" value="实线 = 同一上下文内的数据流" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="1490" y="475" width="160" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg_dashed" value="虚线 = 跨上下文注入（不同周期）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="1490" y="505" width="160" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="notes" value="&lt;b&gt;关键设计说明&lt;/b&gt;&lt;br&gt;1. 电流环每 100μs 必执行（iAbcFbck→Clarke→Park→PID→InvPark→SVPWM）&lt;br&gt;2. Iq 参考值每 1ms 更新（速度环输出），中间 9 次 ISR 保持上次值&lt;br&gt;3. 速度参考值每 5ms 更新（位置环输出），中间 4 次速度环计算保持上次值&lt;br&gt;4. 三相重构基于上一周期 pwmDutys[]，存在一拍延迟（空间矢量扇区判断）&lt;br&gt;5. 弱磁控制（AutoFluxWeaken）在电流环内动态调整 Id 参考，每 100μs 更新" style="rounded=1;fillColor=#FFF3E0;strokeColor=#E65100;fontSize=10;verticalAlign=top;html=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="1150" width="800" height="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="clarke_box" value="Clarke 变换" style="rounded=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;verticalAlign=middle;html=1;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="-5" y="620" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="park_box" value="Park 变换" style="rounded=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;verticalAlign=middle;html=1;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="-5" y="745" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="pid_formula" value="Err = Ref − Fbc&lt;br&gt;Acc += Err × Ki&lt;br&gt;Out = Kp×Err + Acc" style="text;html=1;strokeColor=#F9A825;fillColor=#FFF9C4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="-30" y="912.5" width="150" height="55" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

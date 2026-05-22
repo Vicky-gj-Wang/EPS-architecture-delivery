@@ -1,0 +1,150 @@
+<mxfile host="65bd71144e">
+    <diagram name="EPS_UDS参数流程专题图" id="uds-topic-main">
+        <mxGraphModel dx="695" dy="636" grid="0" gridSize="10" guides="1" tooltips="1" connect="0" arrows="0" fold="0" page="0" pageScale="1" pageWidth="2000" pageHeight="1400" math="0" shadow="1">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="EPS UDS 参数读写教学时序泳道图" style="text;html=0;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="20" width="1240" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="subtitle" value="时间方向：自上而下；实线=同步请求/响应；虚线=异步触发或后台持久化" style="text;html=0;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="58" width="1240" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_tester" value="诊断仪 Tester" style="swimlane;startSize=32;rounded=1;arcSize=6;shadow=1;fontStyle=1;fontSize=12;fillColor=#fff3e0;strokeColor=#f5a623;fontColor=#4e342e;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="90" width="210" height="980" as="geometry"/>
+                </mxCell>
+                <mxCell id="n10_req" value="请求 0x10&#xa;DiagnosticSessionControl" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_tester" vertex="1">
+                    <mxGeometry x="20" y="50" width="170" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="n27_req" value="请求 0x27 Seed" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_tester" vertex="1">
+                    <mxGeometry x="20" y="260" width="170" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="n27_key" value="发送 0x27 Key" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_tester" vertex="1">
+                    <mxGeometry x="20" y="390" width="170" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="n2e_req" value="请求 0x2E&#xa;WriteDataByIdentifier" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_tester" vertex="1">
+                    <mxGeometry x="20" y="540" width="170" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="n2e_rsp" value="0x6E 正响应&#xa;或 NRC 负响应" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_tester" vertex="1">
+                    <mxGeometry x="20" y="910" width="170" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="n22_req" value="请求 0x22&#xa;ReadDataByIdentifier" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_tester" vertex="1">
+                    <mxGeometry x="20" y="980" width="170" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="n22_rsp" value="0x62 响应 DID 数据" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_tester" vertex="1">
+                    <mxGeometry x="20" y="1040" width="170" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_tp" value="CAN/ISO-TP 传输层" style="swimlane;startSize=32;rounded=1;arcSize=6;shadow=1;fontStyle=1;fontSize=12;fillColor=#e0f7fa;strokeColor=#00acc1;fontColor=#006064;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="90" width="210" height="980" as="geometry"/>
+                </mxCell>
+                <mxCell id="n10_tp" value="ISO-TP 分段发送&#xa;请求帧组装" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#b2ebf2;strokeColor=#00acc1;fontColor=#006064;" parent="lane_tp" vertex="1">
+                    <mxGeometry x="20" y="110" width="170" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_uds" value="UDS 会话与安全层" style="swimlane;startSize=32;rounded=1;arcSize=6;shadow=1;fontStyle=1;fontSize=12;fillColor=#e8eaf6;strokeColor=#5c6bc0;fontColor=#283593;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="90" width="220" height="980" as="geometry"/>
+                </mxCell>
+                <mxCell id="n10_ok" value="进入扩展会话&#xa;Session=Extended" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#c5cae9;strokeColor=#5c6bc0;fontColor=#283593;" parent="lane_uds" vertex="1">
+                    <mxGeometry x="20" y="170" width="180" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="n27_seed" value="返回 Seed&#xa;等待 Key" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#c5cae9;strokeColor=#5c6bc0;fontColor=#283593;" parent="lane_uds" vertex="1">
+                    <mxGeometry x="20" y="320" width="180" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="n27_unlock" value="安全解锁通过&#xa;可写关键 DID" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#c5cae9;strokeColor=#5c6bc0;fontColor=#283593;" parent="lane_uds" vertex="1">
+                    <mxGeometry x="20" y="450" width="180" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="n2e_verify" value="会话/安全门控检查&#xa;不满足返回 NRC" style="rhombus;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#d1c4e9;strokeColor=#5c6bc0;fontColor=#283593;" parent="lane_uds" vertex="1">
+                    <mxGeometry x="25" y="600" width="170" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_did" value="DID 参数管理层" style="swimlane;startSize=32;rounded=1;arcSize=6;shadow=1;fontStyle=1;fontSize=12;fillColor=#bbdefb;strokeColor=#1976d2;fontColor=#0d47a1;" parent="1" vertex="1">
+                    <mxGeometry x="710" y="90" width="220" height="980" as="geometry"/>
+                </mxCell>
+                <mxCell id="n2e_write_mirror" value="WriteEepromDiagData&#xa;更新 DID 镜像" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#90caf9;strokeColor=#1976d2;fontColor=#0d47a1;" parent="lane_did" vertex="1">
+                    <mxGeometry x="20" y="690" width="180" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="n_trigger_store" value="ParamDIDRestortEeprom&#xa;触发持久化" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#90caf9;strokeColor=#1976d2;fontColor=#0d47a1;" parent="lane_did" vertex="1">
+                    <mxGeometry x="20" y="770" width="180" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="n22_read" value="ReadEepromDiagData /&#xa;BSWParamSectorRead" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#90caf9;strokeColor=#1976d2;fontColor=#0d47a1;" parent="lane_did" vertex="1">
+                    <mxGeometry x="20" y="910" width="180" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_flash" value="DFlash 持久化层" style="swimlane;startSize=32;rounded=1;arcSize=6;shadow=1;fontStyle=1;fontSize=12;fillColor=#fff9c4;strokeColor=#f9a825;fontColor=#4e342e;" parent="1" vertex="1">
+                    <mxGeometry x="940" y="90" width="220" height="980" as="geometry"/>
+                </mxCell>
+                <mxCell id="n_flash_write" value="ParamDIDWrite&#xa;擦除 + 写入 DID 扇区" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#fff59d;strokeColor=#f9a825;fontColor=#4e342e;" parent="lane_flash" vertex="1">
+                    <mxGeometry x="20" y="770" width="180" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="n_flash_check" value="边界保护 + CRC/ECC&#xa;写后完整性检查" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#fff59d;strokeColor=#f9a825;fontColor=#4e342e;" parent="lane_flash" vertex="1">
+                    <mxGeometry x="20" y="850" width="180" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_ram" value="RAM 参数镜像" style="swimlane;startSize=32;rounded=1;arcSize=6;shadow=1;fontStyle=1;fontSize=12;fillColor=#e8f5e9;strokeColor=#43a047;fontColor=#1b5e20;" parent="1" vertex="1">
+                    <mxGeometry x="1170" y="90" width="220" height="980" as="geometry"/>
+                </mxCell>
+                <mxCell id="n_ram_update" value="RAM 镜像即时生效&#xa;控制环可见新参数" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;html=0;fillColor=#c8e6c9;strokeColor=#43a047;fontColor=#1b5e20;" parent="lane_ram" vertex="1">
+                    <mxGeometry x="20" y="690" width="180" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f5a623;" parent="1" source="n10_req" target="n10_tp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#00acc1;" parent="1" source="n10_tp" target="n10_ok" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e3" value="正响应" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#5c6bc0;fontSize=9;fontColor=#283593;" parent="1" source="n10_ok" target="n27_req" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f5a623;" parent="1" source="n27_req" target="n27_seed" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e5" value="Seed" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#5c6bc0;fontSize=9;fontColor=#283593;" parent="1" source="n27_seed" target="n27_key" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f5a623;" parent="1" source="n27_key" target="n27_unlock" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e7" value="Unlock OK" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#5c6bc0;fontSize=9;fontColor=#283593;" parent="1" source="n27_unlock" target="n2e_req" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f5a623;" parent="1" source="n2e_req" target="n2e_verify" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e9" value="门控通过" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#5c6bc0;fontSize=9;fontColor=#283593;" parent="1" source="n2e_verify" target="n2e_write_mirror" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e10" value="更新" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#1976d2;fontSize=9;fontColor=#1976d2;" parent="1" source="n2e_write_mirror" target="n_ram_update" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#1976d2;" parent="1" source="n2e_write_mirror" target="n_trigger_store" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e12" value="异步持久化" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;dashed=1;fontSize=9;fontColor=#f9a825;" parent="1" source="n_trigger_store" target="n_flash_write" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;" parent="1" source="n_flash_write" target="n_flash_check" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e14" value="完成应答" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;fontSize=9;fontColor=#f9a825;" parent="1" source="n_flash_check" target="n2e_rsp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f5a623;" parent="1" source="n22_req" target="n22_read" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e16" value="读取镜像/扇区" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#1976d2;fontSize=9;fontColor=#1976d2;" parent="1" source="n22_read" target="n22_rsp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e17" value="门控失败 -&gt; NRC" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeWidth=1;strokeColor=#d32f2f;dashed=1;fontSize=9;fontColor=#d32f2f;" parent="1" source="n2e_verify" target="n2e_rsp" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="690" y="760"/>
+                            <mxPoint x="170" y="940"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="notes_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#bdbdbd;shadow=0;" parent="1" vertex="1">
+                    <mxGeometry x="38" y="1240" width="1350" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="notes_text" value="未展开说明：1) 0x10 子功能、0x27 安全算法、NRC 全量码表未展开，避免图面过密；详见通信协议栈专题图。&#xa;2) ISO-TP 首帧/流控/连续帧细节未展开，本图聚焦参数读写与持久化教学。&#xa;3) 图中函数节点仅保留文件名，具体行号保留在配套参考说明文档。" style="text;html=0;strokeColor=none;fillColor=none;fontSize=10;fontColor=#555555;align=left;verticalAlign=top;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="53" y="1258" width="1320" height="98" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

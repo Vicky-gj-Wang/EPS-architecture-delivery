@@ -1,0 +1,487 @@
+<mxfile host="65bd71144e">
+    <diagram id="eps_timing_full2" name="EPS调度时序图_完整版">
+        <mxGraphModel dx="1125" dy="445" grid="0" gridSize="10" guides="1" tooltips="1" connect="0" arrows="0" fold="0" page="0" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="EPS系统 中断与任务调度时序图（完整版）  |  时间窗口：4ms  |  FOC PWM @ 10kHz  |  MCU：AURIX TC233 @ 200MHz  |  OS：Erika OS" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=13;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry y="6" width="1460" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="优先级 / 执行上下文  ·  功能说明" style="text;html=1;strokeColor=#999999;fillColor=#DDDDDD;align=center;fontSize=9;fontStyle=1;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry y="36" width="449" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="时间轴（0ms ──────────────────────────────────────── 4ms）　　1ms = 250px" style="text;html=1;strokeColor=#999999;fillColor=#DDDDDD;align=center;fontSize=9;fontStyle=1;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="452" y="36" width="1000" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ax" style="endArrow=block;endFill=1;strokeColor=#000000;strokeWidth=2;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="452" y="30" as="sourcePoint"/>
+                        <mxPoint x="1466" y="30" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t0l" style="endArrow=none;strokeColor=#333333;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="452" y="24" as="sourcePoint"/>
+                        <mxPoint x="452" y="36" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t0" value="0ms" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="438" y="14" width="30" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="t1l" style="endArrow=none;strokeColor=#555555;dashed=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="702" y="24" as="sourcePoint"/>
+                        <mxPoint x="702" y="560" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t1" value="1ms" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="688" y="14" width="30" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="t2l" style="endArrow=none;strokeColor=#555555;dashed=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="952" y="24" as="sourcePoint"/>
+                        <mxPoint x="952" y="560" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t2" value="2ms" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="938" y="14" width="30" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="t3l" style="endArrow=none;strokeColor=#555555;dashed=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1202" y="24" as="sourcePoint"/>
+                        <mxPoint x="1202" y="560" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t3" value="3ms" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1188" y="14" width="30" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4l" style="endArrow=none;strokeColor=#555555;dashed=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1452" y="24" as="sourcePoint"/>
+                        <mxPoint x="1452" y="560" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t4" value="4ms" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1438" y="14" width="30" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="lb" style="endArrow=none;strokeColor=#333333;strokeWidth=2;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="450" y="36" as="sourcePoint"/>
+                        <mxPoint x="450" y="560" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="bg1" style="rounded=0;fillColor=#FFCCBC;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="56" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg2" style="rounded=0;fillColor=#FFCCBC;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="80" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg3" style="rounded=0;fillColor=#FFE0B2;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="104" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg4" style="rounded=0;fillColor=#E8EAF6;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="128" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg5" style="rounded=0;fillColor=#E8EAF6;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="152" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg6" style="rounded=0;fillColor=#F3E5F5;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="176" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg7" style="rounded=0;fillColor=#E8EAF6;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="200" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg8" style="rounded=0;fillColor=#E0F7FA;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="224" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg9" style="rounded=0;fillColor=#F3E5F5;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="248" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg10" style="rounded=0;fillColor=#E0F7FA;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="272" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg11" style="rounded=0;fillColor=#FFF8E1;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="296" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg12" style="rounded=0;fillColor=#FFF8E1;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="320" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg13" style="rounded=0;fillColor=#FFEBEE;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="344" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg14" style="rounded=0;fillColor=#E0F2F1;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="368" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg15" style="rounded=0;fillColor=#E3F2FD;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="392" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg16" style="rounded=0;fillColor=#FCE4EC;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="432" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg17" style="rounded=0;fillColor=#E8F5E9;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="456" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg18" style="rounded=0;fillColor=#F1F8E9;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="480" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg19" style="rounded=0;fillColor=#FFFDE7;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="504" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg20" style="rounded=0;fillColor=#F5F5F5;strokeColor=#DDDDDD;" parent="1" vertex="1">
+                    <mxGeometry y="528" width="1452" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l1" value="&lt;b&gt;[P62] CAN BASEFIO_AG RX&lt;/b&gt; &lt;font color=&#39;#BF360C&#39;&gt;[ISR2]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;AG标定工具（HYCET）CAN报文接收&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="56" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l2" value="&lt;b&gt;[P61] SMU 安全告警&lt;/b&gt; &lt;font color=&#39;#BF360C&#39;&gt;[ISR2]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;硬件安全监控单元告警，触发安全响应&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="80" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l3" value="&lt;b&gt;[P60] GTM WD 喂狗&lt;/b&gt; &lt;font color=&#39;#E65100&#39;&gt;[ISR1]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;1kHz切换GPIO电平喂4912看门狗芯片&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="104" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l4" value="&lt;b&gt;[P59] CAN ASW TX&lt;/b&gt; &lt;font color=&#39;#BF360C&#39;&gt;[ISR2]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;应用层CAN报文发送完成通知&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="128" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l5" value="&lt;b&gt;[P58] CAN BaseFio TX&lt;/b&gt; &lt;font color=&#39;#BF360C&#39;&gt;[ISR2]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;基础IO层CAN报文发送完成通知&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="152" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l6" value="&lt;b&gt;[P57] CAN ASW RX&lt;/b&gt; &lt;font color=&#39;#BF360C&#39;&gt;[ISR2]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;接收整车控制指令（转矩请求等）&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="176" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l7" value="&lt;b&gt;[P56] CAN XCP TX&lt;/b&gt; &lt;font color=&#39;#BF360C&#39;&gt;[ISR2]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;XCP标定数据CAN发送完成&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="200" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l8" value="&lt;b&gt;[P55] ADC 校准&lt;/b&gt; &lt;font color=&#39;#BF360C&#39;&gt;[ISR2]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;ADC校准完成，仅标定阶段使用，正常运行不活跃&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="224" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l9" value="&lt;b&gt;[P54] CAN BaseFio RX&lt;/b&gt; &lt;font color=&#39;#BF360C&#39;&gt;[ISR2]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;接收UDS/FIO诊断报文&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="248" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l10" value="&lt;b&gt;[P53] CCU6 ICU&lt;/b&gt; &lt;font color=&#39;#E65100&#39;&gt;[ISR1]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;PWM捕获输入（角度信号备用通道）&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="272" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l11" value="&lt;b&gt;[P50/51] QSPI A4412 TX/RX&lt;/b&gt; &lt;font color=&#39;#BF360C&#39;&gt;[ISR2]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;与电源管理芯片A4412的SPI通信&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="296" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l12" value="&lt;b&gt;[P40/41] QSPI 4911 TX/RX&lt;/b&gt; &lt;font color=&#39;#BF360C&#39;&gt;[ISR2]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;与MOSFET驱动芯片4911的SPI通信&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="320" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l13" value="&lt;b&gt;[P30] FOC PWM ISR ★&lt;/b&gt; &lt;font color=&#39;#E65100&#39;&gt;[ISR1]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;10kHz，FOC电流环核心：IntStateMachineHndl()&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontStyle=1;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="344" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l14" value="&lt;b&gt;[P23] SENT CH1 位置传感器&lt;/b&gt; &lt;font color=&#39;#BF360C&#39;&gt;[ISR2]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;SENT协议位置/扭矩传感器数据就绪&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="368" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="l15" value="&lt;b&gt;[P20] STM 500μs 节拍&lt;/b&gt; &lt;font color=&#39;#E65100&#39;&gt;[ISR1*]&lt;/font&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;CounterTick()驱动OS定时触发任务&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="392" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="div" style="endArrow=none;strokeColor=#333333;dashed=1;strokeWidth=2;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint y="420" as="sourcePoint"/>
+                        <mxPoint x="1460" y="420" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="divlabel" value="── OS 任务层（Erika OS 软件调度，优先级独立编号；全部低于硬件中断层）──" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=9;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry y="420" width="1452" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="ol0" value="&lt;b&gt;[OS-Prio16] OSTASK_INIT&lt;/b&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;系统启动初始化，Bsp_Init → StartOS，仅执行一次&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="432" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="ol1" value="&lt;b&gt;[OS-Prio8] OSTASK_1MS&lt;/b&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;StateMachine + UDS NetworkLayer + ADC滤波 + XCP命令&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontStyle=1;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="456" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="ol2" value="&lt;b&gt;[OS-Prio4] OSTASK_2x5MS&lt;/b&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;Asw_2x5ms + XCP DAQ；&lt;font color=&#39;#C62828&#39;&gt;仅 Diagnostic_InitFlag==TRUE（UDS初始化完成）时执行，否则该任务内容为空&lt;/font&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry y="480" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="ol3" value="&lt;b&gt;[OS-Prio2] OSTASK_10MS&lt;/b&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;UDS诊断更新 + Asw_5ms + 故障恢复 + 喂软件WD&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;" parent="1" vertex="1">
+                    <mxGeometry y="504" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="ol4" value="&lt;b&gt;[OS-Prio1] OSTASK_BACKGROUND&lt;/b&gt;  &lt;font style=&#39;font-size:8px&#39; color=&#39;#444444&#39;&gt;后台以CPU空闲填充为主；&lt;font color=&#39;#C62828&#39;&gt;仅在 readyState &amp;amp;&amp;amp; !s_DflashEraseFlag 时执行 ASWParamSectorErase()（一次）&lt;/font&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;spacingLeft=4;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry y="528" width="448" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="w1a" value="AG_RX" style="rounded=0;fillColor=#BF360C;strokeColor=#7F0000;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="580" y="58" width="38" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w1b" value="AG_RX" style="rounded=0;fillColor=#BF360C;strokeColor=#7F0000;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="1140" y="58" width="38" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w2a" value="SMU!" style="rounded=0;fillColor=#B71C1C;strokeColor=#7F0000;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="860" y="82" width="36" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w3a" value="" style="rounded=0;fillColor=#E65100;strokeColor=#BF360C;" parent="1" vertex="1">
+                    <mxGeometry x="452" y="106" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w3b" value="" style="rounded=0;fillColor=#E65100;strokeColor=#BF360C;" parent="1" vertex="1">
+                    <mxGeometry x="702" y="106" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w3c" value="" style="rounded=0;fillColor=#E65100;strokeColor=#BF360C;" parent="1" vertex="1">
+                    <mxGeometry x="952" y="106" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w3d" value="" style="rounded=0;fillColor=#E65100;strokeColor=#BF360C;" parent="1" vertex="1">
+                    <mxGeometry x="1202" y="106" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w3e" value="" style="rounded=0;fillColor=#E65100;strokeColor=#BF360C;" parent="1" vertex="1">
+                    <mxGeometry x="1452" y="106" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w4a" value="TX" style="rounded=0;fillColor=#283593;strokeColor=#1A237E;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="530" y="130" width="22" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w4b" value="TX" style="rounded=0;fillColor=#283593;strokeColor=#1A237E;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="780" y="130" width="22" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w4c" value="TX" style="rounded=0;fillColor=#283593;strokeColor=#1A237E;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="1280" y="130" width="22" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w5a" value="TX" style="rounded=0;fillColor=#311B92;strokeColor=#1A237E;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="640" y="154" width="22" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w5b" value="TX" style="rounded=0;fillColor=#311B92;strokeColor=#1A237E;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="1140" y="154" width="22" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w6a" value="CAN RX" style="rounded=0;fillColor=#6A1B9A;strokeColor=#4A148C;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="178" width="42" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w6b" value="CAN RX" style="rounded=0;fillColor=#6A1B9A;strokeColor=#4A148C;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="1090" y="178" width="42" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w7a" value="XCP TX" style="rounded=0;fillColor=#283593;strokeColor=#1A237E;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="720" y="202" width="42" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w8n" value="（仅标定阶段触发）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="226" width="300" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w9a" value="FIO RX" style="rounded=0;fillColor=#4527A0;strokeColor=#311B92;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="250" width="42" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w9b" value="FIO RX" style="rounded=0;fillColor=#4527A0;strokeColor=#311B92;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="1040" y="250" width="42" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w10n" value="（偶发，正常运行期间活跃度低）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="274" width="340" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w11a" value="SPI" style="rounded=0;fillColor=#F57F17;strokeColor=#E65100;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="298" width="24" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w11b" value="SPI" style="rounded=0;fillColor=#F57F17;strokeColor=#E65100;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="740" y="298" width="24" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w11c" value="SPI" style="rounded=0;fillColor=#F57F17;strokeColor=#E65100;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="990" y="298" width="24" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w11d" value="SPI" style="rounded=0;fillColor=#F57F17;strokeColor=#E65100;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="1240" y="298" width="24" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w12a" value="SPI" style="rounded=0;fillColor=#FF8F00;strokeColor=#E65100;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="322" width="24" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w12b" value="SPI" style="rounded=0;fillColor=#FF8F00;strokeColor=#E65100;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="770" y="322" width="24" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w12c" value="SPI" style="rounded=0;fillColor=#FF8F00;strokeColor=#E65100;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="1020" y="322" width="24" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="w12d" value="SPI" style="rounded=0;fillColor=#FF8F00;strokeColor=#E65100;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="1270" y="322" width="24" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f0" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="452" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f1" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="477" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f2" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="502" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f3" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="527" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f4" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="552" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f5" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="577" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f6" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="602" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f7" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="627" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f8" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="652" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f9" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="677" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f10" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="702" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f11" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="727" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f12" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="752" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f13" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="777" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f14" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="802" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f15" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="827" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f16" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="852" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f17" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="877" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f18" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="902" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f19" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="927" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f20" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="952" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f21" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="977" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f22" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1002" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f23" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1027" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f24" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1052" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f25" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1077" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f26" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1102" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f27" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1127" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f28" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1152" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f29" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1177" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f30" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1202" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f31" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1227" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f32" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1252" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f33" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1277" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f34" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1302" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f35" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1327" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f36" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1352" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f37" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1377" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f38" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1402" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="f39" value="" style="rounded=0;fillColor=#C62828;strokeColor=#7F0000;" parent="1" vertex="1">
+                    <mxGeometry x="1427" y="346" width="7" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="s0" value="" style="rounded=0;fillColor=#00695C;strokeColor=#004D40;" parent="1" vertex="1">
+                    <mxGeometry x="452" y="370" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="s1" value="" style="rounded=0;fillColor=#00695C;strokeColor=#004D40;" parent="1" vertex="1">
+                    <mxGeometry x="702" y="370" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="s2" value="" style="rounded=0;fillColor=#00695C;strokeColor=#004D40;" parent="1" vertex="1">
+                    <mxGeometry x="952" y="370" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="s3" value="" style="rounded=0;fillColor=#00695C;strokeColor=#004D40;" parent="1" vertex="1">
+                    <mxGeometry x="1202" y="370" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="s4" value="" style="rounded=0;fillColor=#00695C;strokeColor=#004D40;" parent="1" vertex="1">
+                    <mxGeometry x="1452" y="370" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="stm0" value="" style="rounded=0;fillColor=#1565C0;strokeColor=#0D47A1;" parent="1" vertex="1">
+                    <mxGeometry x="452" y="394" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="stm1" value="" style="rounded=0;fillColor=#1565C0;strokeColor=#0D47A1;" parent="1" vertex="1">
+                    <mxGeometry x="577" y="394" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="stm2" value="" style="rounded=0;fillColor=#1565C0;strokeColor=#0D47A1;" parent="1" vertex="1">
+                    <mxGeometry x="702" y="394" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="stm3" value="" style="rounded=0;fillColor=#1565C0;strokeColor=#0D47A1;" parent="1" vertex="1">
+                    <mxGeometry x="827" y="394" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="stm4" value="" style="rounded=0;fillColor=#1565C0;strokeColor=#0D47A1;" parent="1" vertex="1">
+                    <mxGeometry x="952" y="394" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="stm5" value="" style="rounded=0;fillColor=#1565C0;strokeColor=#0D47A1;" parent="1" vertex="1">
+                    <mxGeometry x="1077" y="394" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="stm6" value="" style="rounded=0;fillColor=#1565C0;strokeColor=#0D47A1;" parent="1" vertex="1">
+                    <mxGeometry x="1202" y="394" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="stm7" value="" style="rounded=0;fillColor=#1565C0;strokeColor=#0D47A1;" parent="1" vertex="1">
+                    <mxGeometry x="1327" y="394" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="stm8" value="" style="rounded=0;fillColor=#1565C0;strokeColor=#0D47A1;" parent="1" vertex="1">
+                    <mxGeometry x="1452" y="394" width="8" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ow0" value="Init（仅启动时执行一次）" style="rounded=0;fillColor=#AD1457;strokeColor=#880E4F;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="452" y="434" width="160" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ow1a" value="StateMachine+UDS+ADC" style="rounded=0;fillColor=#2E7D32;strokeColor=#1B5E20;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="452" y="458" width="70" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ow1b" value="1ms Task" style="rounded=0;fillColor=#2E7D32;strokeColor=#1B5E20;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="702" y="458" width="70" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ow1c" value="1ms Task" style="rounded=0;fillColor=#2E7D32;strokeColor=#1B5E20;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="952" y="458" width="70" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ow1d" value="1ms Task" style="rounded=0;fillColor=#2E7D32;strokeColor=#1B5E20;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="1202" y="458" width="70" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ow2a" value="Asw_2x5ms（条件）" style="rounded=0;fillColor=#388E3C;strokeColor=#1B5E20;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="452" y="482" width="104" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ow2b" value="Asw_2x5ms（条件）" style="rounded=0;fillColor=#388E3C;strokeColor=#1B5E20;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="1077" y="482" width="104" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ow3" value="UDS诊断更新 + Asw_5ms + 故障恢复 + ServiceWDT" style="rounded=0;fillColor=#827717;strokeColor=#5D4037;fontSize=7;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="452" y="506" width="228" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="ow4" value="CPU空闲填充（仅条件满足时插入 ASWParamSectorErase()）" style="rounded=0;fillColor=#616161;strokeColor=#424242;fontSize=7;fontColor=#FFFFFF;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="692" y="530" width="760" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_sched_01" value="MOD-SCH-01" style="text;html=1;strokeColor=#C62828;fillColor=#FFEBEE;align=center;fontSize=8;fontStyle=1;fontColor=#C62828;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="692" y="508" width="80" height="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="notes" value="&lt;b&gt;优先级规则：&lt;/b&gt;硬件中断（P1~P255，越大越高）&gt;&gt; OS任务（Prio1~16，越大越高）；任何硬件中断均可打断任何OS任务&lt;br&gt; &lt;b&gt;ISR1&lt;/b&gt;（橙色标注）：退出后直接返回被打断处，OS不感知 · 用于FOC/WD/STM等极致实时场景&lt;br&gt; &lt;b&gt;ISR2&lt;/b&gt;（深红标注）：退出时触发OS重新调度，可唤醒任务 · 用于CAN/SPI/ADC等需通知上层的场景 · &lt;b&gt;STM[ISR1*]&lt;/b&gt;：ISR1内部调用CounterTick()间接驱动OS任务定时激活&lt;br&gt; &lt;b&gt;实时性说明：&lt;/b&gt;当前工程未开启中断嵌套，CAN/SPI 到达不会抢占 FOC ISR；图中不将其表述为“CAN打断FOC”的实时性风险，真正需关注的是 ISR 执行时长与任务积压延迟 · 1ms任务最大积压激活数=5（rnact_max）" style="text;html=1;strokeColor=#AAAAAA;fillColor=#FAFAFA;align=left;verticalAlign=top;fontSize=9;whiteSpace=wrap;rounded=1;spacingLeft=8;spacingTop=4;" parent="1" vertex="1">
+                    <mxGeometry y="558" width="1460" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_sched_02" value="MOD-SCH-02" style="text;html=1;strokeColor=#C62828;fillColor=#FFEBEE;align=center;fontSize=8;fontStyle=1;fontColor=#C62828;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="747" y="563" width="80" height="14" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

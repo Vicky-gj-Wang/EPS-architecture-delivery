@@ -1,0 +1,242 @@
+<mxfile host="65bd71144e">
+    <diagram id="flash-cal-main" name="标定数据管理流程图">
+        <mxGraphModel dx="2529" dy="363" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="1">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="EPS 标定数据管理流程图" style="text;html=1;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="30" width="800" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="desc" value="图示：参数来自三个独立入口，统一流向DFlash持久化执行层。三个入口并行处理，最终汇总到后端统一写入机制。" style="text;html=1;align=center;fontSize=11;fontColor=#666666;fontStyle=0;" parent="1" vertex="1">
+                    <mxGeometry x="-90" y="66" width="1200" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_app" value="应用参数入口&#xa;(开发者定义)" style="swimlane;startSize=40;horizontal=1;rounded=1;arcSize=6;shadow=1;fontStyle=1;fontSize=12;fillColor=#fff3e0;strokeColor=#f5a623;fontColor=#4e342e;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="108" width="240" height="620" as="geometry"/>
+                </mxCell>
+                <mxCell id="app_poweron" value="上电触发&#xa;PowerOn / Reset" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=11;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_app" vertex="1">
+                    <mxGeometry x="20" y="50" width="200" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="app_sector_init" value="ParamSectorInit()&#xa;参数扇区初始化&#xa;DFlashBaseInterface.c" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_app" vertex="1">
+                    <mxGeometry x="20" y="120" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="app_check_equal" value="CheckParamEqual()&#xa;参数版本比对&#xa;(默认值 vs Flash)&#xa;DFlashBaseInterface.c" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_app" vertex="1">
+                    <mxGeometry x="20" y="210" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="app_load_default" value="LoadDefaultParam()&#xa;默认值回写&#xa;/参数镜像恢复" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_app" vertex="1">
+                    <mxGeometry x="20" y="310" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="app_pi_learn" value="PIAutoTune()&#xa;初始位置学习&#xa;/PI参数自适应" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#ffe0b2;strokeColor=#f5a623;fontColor=#4e342e;" parent="lane_app" vertex="1">
+                    <mxGeometry x="20" y="410" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="app_write_app" value="AppParamWrite()&#xa;应用参数触发写入" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#fff3e0;strokeColor=#f5a623;fontColor=#bf360c;fontStyle=1;" parent="lane_app" vertex="1">
+                    <mxGeometry x="20" y="530" width="200" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_app1" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f5a623;" parent="lane_app" source="app_poweron" target="app_sector_init" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_app2" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f5a623;" parent="lane_app" source="app_sector_init" target="app_check_equal" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_app3" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f5a623;" parent="lane_app" source="app_check_equal" target="app_load_default" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_app4" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f5a623;" parent="lane_app" source="app_load_default" target="app_pi_learn" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_app5" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f5a623;" parent="lane_app" source="app_pi_learn" target="app_write_app" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_uds" value="UDS 诊断入口&#xa;(诊断服务触发)" style="swimlane;startSize=40;horizontal=1;rounded=1;arcSize=6;shadow=1;fontStyle=1;fontSize=12;fillColor=#e8eaf6;strokeColor=#5c6bc0;fontColor=#283593;" parent="1" vertex="1">
+                    <mxGeometry x="340" y="110" width="240" height="620" as="geometry"/>
+                </mxCell>
+                <mxCell id="uds_rx_frame" value="接收UDS请求帧&#xa;(Service 0x22/0x2E)&#xa;communicate.c" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#c5cae9;strokeColor=#5c6bc0;fontColor=#283593;" parent="lane_uds" vertex="1">
+                    <mxGeometry x="20" y="49" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="uds_parse_did" value="ParseDID()&#xa;解析DID标识符&#xa;extract parameter" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#c5cae9;strokeColor=#5c6bc0;fontColor=#283593;" parent="lane_uds" vertex="1">
+                    <mxGeometry x="20" y="139" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="uds_validate" value="ValidateDIDParam()&#xa;参数合法性检查&#xa;(范围、校验等)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#c5cae9;strokeColor=#5c6bc0;fontColor=#283593;" parent="lane_uds" vertex="1">
+                    <mxGeometry x="20" y="229" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="uds_apply" value="ApplyDIDParam()&#xa;应用到内存镜像&#xa;(当前生效)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#c5cae9;strokeColor=#5c6bc0;fontColor=#283593;" parent="lane_uds" vertex="1">
+                    <mxGeometry x="20" y="319" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="uds_write_did" value="WriteDidToFlash()&#xa;UDS诊断参数触发写入" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#e8eaf6;strokeColor=#5c6bc0;fontColor=#1a237e;fontStyle=1;" parent="lane_uds" vertex="1">
+                    <mxGeometry x="20" y="529" width="200" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_uds1" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#5c6bc0;" parent="lane_uds" source="uds_rx_frame" target="uds_parse_did" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_uds2" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#5c6bc0;" parent="lane_uds" source="uds_parse_did" target="uds_validate" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_uds3" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#5c6bc0;" parent="lane_uds" source="uds_validate" target="uds_apply" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_uds4" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#5c6bc0;" parent="lane_uds" source="uds_apply" target="uds_write_did" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="120" y="399"/>
+                            <mxPoint x="120" y="529"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lane_xcp" value="XCP 标定入口&#xa;(在线标定)" style="swimlane;startSize=40;horizontal=1;rounded=1;arcSize=6;shadow=1;fontStyle=1;fontSize=12;fillColor=#e3f2fd;strokeColor=#1976d2;fontColor=#0d47a1;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="110" width="240" height="620" as="geometry"/>
+                </mxCell>
+                <mxCell id="xcp_online_edit" value="在线修改参数&#xa;(XCP标定工具)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#bbdefb;strokeColor=#1976d2;fontColor=#0d47a1;" parent="lane_xcp" vertex="1">
+                    <mxGeometry x="20" y="50" width="200" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="xcp_shadow_update" value="ShadowParamUpdate()&#xa;参数镜像实时更新&#xa;xcp.c" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#bbdefb;strokeColor=#1976d2;fontColor=#0d47a1;" parent="lane_xcp" vertex="1">
+                    <mxGeometry x="20" y="130" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="xcp_preview" value="预览效果&#xa;(实时闭环验证)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#bbdefb;strokeColor=#1976d2;fontColor=#0d47a1;" parent="lane_xcp" vertex="1">
+                    <mxGeometry x="20" y="230" width="200" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="xcp_freeze_decision" value="Freeze决策&#xa;(是否冻结参数？)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#bbdefb;strokeColor=#1976d2;fontColor=#0d47a1;" parent="lane_xcp" vertex="1">
+                    <mxGeometry x="20" y="320" width="200" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="xcp_write_xcp" value="XcpFreezeToFlash()&#xa;冻结参数触发写入" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#e3f2fd;strokeColor=#1976d2;fontColor=#0d47a1;fontStyle=1;" parent="lane_xcp" vertex="1">
+                    <mxGeometry x="20" y="530" width="200" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_xcp1" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#1976d2;" parent="lane_xcp" source="xcp_online_edit" target="xcp_shadow_update" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_xcp2" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#1976d2;" parent="lane_xcp" source="xcp_shadow_update" target="xcp_preview" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_xcp3" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#1976d2;" parent="lane_xcp" source="xcp_preview" target="xcp_freeze_decision" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_xcp4" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#1976d2;" parent="lane_xcp" source="xcp_freeze_decision" target="xcp_write_xcp" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="120" y="400"/>
+                            <mxPoint x="120" y="530"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lane_exec" value="DFlash 持久化执行层" style="swimlane;startSize=40;horizontal=1;rounded=1;arcSize=6;shadow=1;fontStyle=1;fontSize=12;fillColor=#fff9c4;strokeColor=#f9a825;fontColor=#4e342e;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="760" width="760" height="360" as="geometry"/>
+                </mxCell>
+                <mxCell id="exec_write_queue" value="WriteQueue&#xa;写入队列聚合&#xa;(来自3个入口)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#fff59d;strokeColor=#f9a825;fontColor=#4e342e;" parent="lane_exec" vertex="1">
+                    <mxGeometry x="20" y="50" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="exec_priority" value="PrioritySort&#xa;优先级排序&#xa;(App &gt; UDS &gt; XCP)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#fff59d;strokeColor=#f9a825;fontColor=#4e342e;" parent="lane_exec" vertex="1">
+                    <mxGeometry x="160" y="50" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="exec_sector_map" value="SectorMapping&#xa;扇区映射&#xa;(DFlashBaseInterface.c)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#fff59d;strokeColor=#f9a825;fontColor=#4e342e;" parent="lane_exec" vertex="1">
+                    <mxGeometry x="300" y="50" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="exec_crc_calc" value="CRC校验&#xa;计算与标记&#xa;(data integrity)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#fff59d;strokeColor=#f9a825;fontColor=#4e342e;" parent="lane_exec" vertex="1">
+                    <mxGeometry x="440" y="50" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="exec_write_flash" value="WriteToFlash&#xa;实际Flash写入&#xa;Bsp_Flash.c&#xa;IfxDmu(LLD)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#fff59d;strokeColor=#f9a825;fontColor=#4e342e;" parent="lane_exec" vertex="1">
+                    <mxGeometry x="580" y="50" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="exec_cache_update" value="CacheUpdate&#xa;参数镜像同步&#xa;(内存缓存更新)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#fff59d;strokeColor=#f9a825;fontColor=#4e342e;" parent="lane_exec" vertex="1">
+                    <mxGeometry x="20" y="160" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="exec_persist_check" value="PersistCheck&#xa;掉电保护校验&#xa;(确保可恢复)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#fff59d;strokeColor=#f9a825;fontColor=#4e342e;" parent="lane_exec" vertex="1">
+                    <mxGeometry x="160" y="160" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="exec_notify_done" value="NotifyDone()&#xa;写入完成通知&#xa;(返回3个入口)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#fff59d;strokeColor=#f9a825;fontColor=#4e342e;" parent="lane_exec" vertex="1">
+                    <mxGeometry x="300" y="160" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="exec_log_record" value="LogRecord()&#xa;操作日志记录&#xa;(审计追踪)" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=10;fillColor=#fff59d;strokeColor=#f9a825;fontColor=#4e342e;" parent="lane_exec" vertex="1">
+                    <mxGeometry x="440" y="160" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_exec1" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;" parent="lane_exec" source="exec_write_queue" target="exec_priority" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_exec2" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;" parent="lane_exec" source="exec_priority" target="exec_sector_map" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_exec3" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;" parent="lane_exec" source="exec_sector_map" target="exec_crc_calc" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_exec4" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;" parent="lane_exec" source="exec_crc_calc" target="exec_write_flash" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_exec5" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;" parent="lane_exec" source="exec_write_flash" target="exec_cache_update" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="660" y="150"/>
+                            <mxPoint x="80" y="150"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_exec6" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;" parent="lane_exec" source="exec_cache_update" target="exec_persist_check" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_exec7" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;" parent="lane_exec" source="exec_persist_check" target="exec_notify_done" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_exec8" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;strokeColor=#f9a825;" parent="lane_exec" source="exec_notify_done" target="exec_log_record" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_app_to_exec" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#f5a623;" parent="1" source="app_write_app" target="exec_write_queue" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="130" y="740"/>
+                            <mxPoint x="130" y="740"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_uds_to_exec" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#5c6bc0;" parent="1" source="uds_write_did" target="exec_write_queue" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="410" y="740"/>
+                            <mxPoint x="160" y="740"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_xcp_to_exec" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#1976d2;" parent="1" source="xcp_write_xcp" target="exec_write_queue" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="700" y="750"/>
+                            <mxPoint x="200" y="750"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_exec_notify_app" value="完成通知" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;dashed=1;strokeColor=#f5a623;fontSize=9;" parent="1" source="exec_notify_done" target="app_write_app" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="400" y="770"/>
+                            <mxPoint x="230" y="770"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_exec_notify_uds" value="完成通知" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;dashed=1;strokeColor=#5c6bc0;fontSize=9;" parent="1" source="exec_notify_done" target="uds_write_did" edge="1">
+                    <mxGeometry x="0.2658" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="440" y="800"/>
+                            <mxPoint x="440" y="800"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_exec_notify_xcp" value="完成通知" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeWidth=1;dashed=1;strokeColor=#1976d2;fontSize=9;" parent="1" source="exec_notify_done" target="xcp_write_xcp" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="480" y="770"/>
+                            <mxPoint x="690" y="770"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="note" value="【图层结构说明】上方：3个独立的入口泳道（纵向），各自维护参数修改的独立流程。下方：统一的执行层（横向），完成实际持久化、校验、通知等公共功能。&#xa;【优先级】App &gt; UDS &gt; XCP（执行层排序规则）。若3个入口同时触发写入，按此顺序处理，避免冲突。&#xa;【关键模块】DFlashBaseInterface.c（高层接口）→ Bsp_Flash.c（驱动）→ IfxDmu（Infineon LLD）。&#xa;【未展开】各模块内部的具体算法实现（如CRC校验算法、掉电恢复逻辑）见专题文档。" style="rounded=1;whiteSpace=wrap;shadow=1;fontSize=9;fillColor=#fffde7;strokeColor=#f9a825;fontColor=#4e342e;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="1140" width="700" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend1" value="实线箭头：直接流向关系" style="text;html=1;align=left;fontSize=10;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="1205" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend2" value="虚线箭头：返回通知" style="text;html=1;align=left;fontSize=10;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="1205" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend3" value="粗线箭头：汇总流向执行层" style="text;html=1;align=left;fontSize=10;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="570" y="1205" width="240" height="20" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

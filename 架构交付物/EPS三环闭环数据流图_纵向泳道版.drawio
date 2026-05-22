@@ -1,0 +1,275 @@
+<mxfile host="65bd71144e">
+    <diagram id="IZVaF7558Bp4poYxum9k" name="Page-1">
+        <mxGraphModel dx="2393" dy="649" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="2339" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <UserObject label="" id="bg_sensor">
+                    <mxCell style="rounded=0;fillColor=#FFF8E1;strokeColor=#F9A825;opacity=30;" parent="1" vertex="1">
+                        <mxGeometry x="81" y="130" width="260" height="2104" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="a_s4" value="MrRotorPosition" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#F9A825;fontColor=#795548;" parent="1" source="s_atan" target="s_mech" edge="1">
+                    <mxGeometry x="-0.3528" y="10" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="170" y="420"/>
+                            <mxPoint x="100" y="420"/>
+                            <mxPoint x="100" y="634"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="title" value="EPS 三环闭环数据流图（纵向泳道版）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="20" width="1440" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="subtitle" value="纵向泳道 = 执行上下文（左→右频率递减）| 数据从上向下流 | 虚线 = 跨泳道注入" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=10;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="54" width="1440" height="18" as="geometry"/>
+                </mxCell>
+                <mxCell id="hdr_sensor" value="&lt;b&gt;传感器采样&lt;/b&gt;&lt;br&gt;ISR顶层 · 100μs" style="rounded=1;fillColor=#F9A825;strokeColor=#F57F17;fontColor=#ffffff;fontSize=11;fontStyle=1;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="78" width="220" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="hdr_current" value="&lt;b&gt;电流环&lt;/b&gt;&lt;br&gt;FOC ISR · 100μs" style="rounded=1;fillColor=#1565C0;strokeColor=#0D47A1;fontColor=#ffffff;fontSize=11;fontStyle=1;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="78" width="220" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="hdr_speed" value="&lt;b&gt;速度环&lt;/b&gt;&lt;br&gt;1ms · 每10次ISR" style="rounded=1;fillColor=#2E7D32;strokeColor=#1B5E20;fontColor=#ffffff;fontSize=11;fontStyle=1;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="760" y="78" width="220" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="hdr_pos" value="&lt;b&gt;位置环&lt;/b&gt;&lt;br&gt;5ms · 每50次ISR" style="rounded=1;fillColor=#6A1B9A;strokeColor=#4A148C;fontColor=#ffffff;fontSize=11;fontStyle=1;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1160" y="78" width="220" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg_current" value="" style="rounded=0;fillColor=#E3F2FD;strokeColor=#1565C0;opacity=30;textShadow=1;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="134" width="360" height="2100" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg_speed" value="" style="rounded=0;fillColor=#E8F5E9;strokeColor=#2E7D32;opacity=30;" parent="1" vertex="1">
+                    <mxGeometry x="760" y="134" width="360" height="2100" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg_pos" value="" style="rounded=0;fillColor=#F3E5F5;strokeColor=#6A1B9A;opacity=30;" parent="1" vertex="1">
+                    <mxGeometry x="1160" y="134" width="360" height="2100" as="geometry"/>
+                </mxCell>
+                <mxCell id="row1_lbl" value="外部指令输入" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#C62828;" parent="1" vertex="1">
+                    <mxGeometry x="-1" y="148" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="asw_spd" value="&lt;b&gt;速度指令&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;SetTgtValue_Hw()&lt;br&gt;SpeedInCtrl_Req&lt;/font&gt;" style="rounded=1;fillColor=#FCE4EC;strokeColor=#C62828;fontColor=#B71C1C;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="775" y="148" width="180" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="asw_pos" value="&lt;b&gt;位置指令&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;SetTgtValue_Hw()&lt;br&gt;MechPositionInCtrl_Req&lt;/font&gt;" style="rounded=1;fillColor=#FCE4EC;strokeColor=#C62828;fontColor=#B71C1C;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1175" y="148" width="195" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="asw_iq" value="&lt;b&gt;力矩指令&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;SetMtrDmdTq_Nm()&lt;br&gt;Iq_Ref（旁路速度环）&lt;/font&gt;" style="rounded=1;fillColor=#FCE4EC;strokeColor=#C62828;fontColor=#B71C1C;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="148" width="200" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="row2_lbl" value="① 采样" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#795548;" parent="1" vertex="1">
+                    <mxGeometry x="-1" y="230" width="80" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="s_adc" value="&lt;b&gt;MR ADC 采样&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;GetPstnADCVal()&lt;br&gt;MrSampleSin / MrSampleCos&lt;/font&gt;" style="rounded=1;fillColor=#FFF8E1;strokeColor=#F9A825;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="115" y="230" width="190" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_adc" value="&lt;b&gt;ADC采样与电流重构&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;GetCurrentAdcVal()&lt;br&gt;扇区选相 → iAbcFbck（Ia,Ib,Ic）&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="230" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="row3_lbl" value="② 解算/变换" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#795548;" parent="1" vertex="1">
+                    <mxGeometry x="1" y="330" width="80" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="s_atan" value="&lt;b&gt;atan2 解算&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;MrATANPositionSpeedAlgorithm()&lt;br&gt;→ MrRotorPosition（0~2π）&lt;/font&gt;" style="rounded=1;fillColor=#FFF8E1;strokeColor=#F9A825;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="115" y="330" width="190" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_clarke" value="&lt;b&gt;Clarke 变换&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;FocCrntLoop()&lt;br&gt;→ iAlBeFbck（Iα, Iβ）&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="330" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="row4_lbl" value="③ 换算" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#795548;" parent="1" vertex="1">
+                    <mxGeometry x="-1" y="440" width="80" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="s_ele" value="&lt;b&gt;电角度换算&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;× 极对数 × 1024/(π/2)&lt;br&gt;→ &lt;b&gt;MrElePosition&lt;/b&gt;（0~4096）&lt;br&gt;− MrIniPosition（初始补偿）&lt;/font&gt;" style="rounded=1;fillColor=#FFE082;strokeColor=#F9A825;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="115" y="440" width="190" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="s_speed" value="&lt;b&gt;速度计算&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Δ位置（10次移动平均）&lt;br&gt;IIR低通滤波&lt;br&gt;→ &lt;b&gt;MrMechSpeed&lt;/b&gt;（rpm）&lt;/font&gt;" style="rounded=1;fillColor=#FFE082;strokeColor=#F9A825;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="115" y="522" width="190" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="s_mech" value="&lt;b&gt;圈数累计&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Δ越过±1.9rad → ±1圈&lt;br&gt;→ &lt;b&gt;MechPositionInCtrl&lt;/b&gt;（圈）&lt;/font&gt;" style="rounded=1;fillColor=#FFE082;strokeColor=#F9A825;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="115" y="608" width="190" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_park" value="&lt;b&gt;Park 变换&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;注入 sinθ / cosθ（MrElePosition）&lt;br&gt;→ &lt;b&gt;Id_Fbk, Iq_Fbk&lt;/b&gt;&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="440" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="row5_lbl" value="④ 误差" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#795548;" parent="1" vertex="1">
+                    <mxGeometry x="-2" y="710" width="80" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="spd_err" value="&lt;b&gt;速度误差&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Err = SpeedReq − SpeedFbk&lt;/font&gt;" style="rounded=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="775" y="710" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="pos_err" value="&lt;b&gt;位置误差&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Err = PosReq − PosFbk&lt;/font&gt;" style="rounded=1;fillColor=#F3E5F5;strokeColor=#6A1B9A;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1175" y="710" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="row6_lbl" value="⑤ PID" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#795548;" parent="1" vertex="1">
+                    <mxGeometry x="-1" y="820" width="80" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_pid" value="&lt;b&gt;电流环 PID（Id/Iq）&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;ControllerPIDrAW()&lt;br&gt;含弱磁 AutoFluxWeaken&lt;br&gt;→ &lt;b&gt;Ud, Uq&lt;/b&gt;&lt;br&gt;&lt;font color=&#39;#C62828&#39;&gt;Iq/扭矩请求进入本环前受三层限流：连接器限流 + 热保护限流 + 故障状态降额&lt;/font&gt;&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=10;verticalAlign=middle;html=1;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="820" width="200" height="88" as="geometry"/>
+                </mxCell>
+                <mxCell id="spd_pid" value="&lt;b&gt;速度环 PID&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;SpeedLoop()&lt;br&gt;ControllerPIDrAW()&lt;br&gt;→ &lt;b&gt;Iq_Ref&lt;/b&gt;（speedPIDCal.Output）&lt;/font&gt;" style="rounded=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="775" y="820" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="pos_pid" value="&lt;b&gt;位置环 PID&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;PositionLoop()&lt;br&gt;ControllerPIDrAW()&lt;br&gt;→ &lt;b&gt;SpeedReq&lt;/b&gt;（positionPIDcal.Output）&lt;/font&gt;" style="rounded=1;fillColor=#F3E5F5;strokeColor=#6A1B9A;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1175" y="820" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="row7_lbl" value="⑥ 调制" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#795548;" parent="1" vertex="1">
+                    <mxGeometry y="940" width="80" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_svpwm" value="&lt;b&gt;反Park + SVPWM&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;InvPark → Uα/Uβ&lt;br&gt;StdSvpwmCalc() → pwmDutys[]&lt;/font&gt;" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="940" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="row8_lbl" value="⑦ 输出" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#795548;" parent="1" vertex="1">
+                    <mxGeometry x="-1" y="1050" width="80" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="c_pwm" value="&lt;b&gt;PWM 输出&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:9px&#39;&gt;Pwm_UVWTonSet()&lt;br&gt;→ GTM 寄存器（电机）&lt;/font&gt;" style="rounded=1;fillColor=#B71C1C;strokeColor=#7F0000;fontColor=#ffffff;fontSize=10;verticalAlign=middle;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="1050" width="200" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_s1" value="MrSampleSin/Cos" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#F9A825;fontColor=#795548;" parent="1" source="s_adc" target="s_atan" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_s2" value="MrRotorPosition" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#F9A825;fontColor=#795548;" parent="1" source="s_atan" target="s_ele" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_c1" value="iAbcFbck（Ia,Ib,Ic）" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="c_adc" target="c_clarke" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_c2" value="iAlBeFbck（Iα,Iβ）" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="c_clarke" target="c_park" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_c3" value="Id_Fbk, Iq_Fbk" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="c_park" target="c_pid" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="475" y="680"/>
+                            <mxPoint x="475" y="820"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a_c4" value="Ud, Uq" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="c_pid" target="c_svpwm" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_c5" value="pwmDutys[]" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#1565C0;fontColor=#1565C0;" parent="1" source="c_svpwm" target="c_pwm" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_sp1" value="Err" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#2E7D32;fontColor=#2E7D32;" parent="1" source="spd_err" target="spd_pid" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_po1" value="Err" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#6A1B9A;fontColor=#6A1B9A;" parent="1" source="pos_err" target="pos_pid" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="x_ele_park" value="sinθ/cosθ（MrElePosition）" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#F57F17;fontColor=#F57F17;dashed=1;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;textDirection=vertical-lr;" parent="1" source="s_ele" target="c_park" edge="1">
+                    <mxGeometry x="-0.2857" y="-5" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="330" y="475"/>
+                            <mxPoint x="330" y="475"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="x_spd_err" value="SpeedInCtrl（rpm）" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#F57F17;fontColor=#F57F17;dashed=1;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="s_speed" target="spd_err" edge="1">
+                    <mxGeometry x="0.1179" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="320" y="557"/>
+                            <mxPoint x="740" y="557"/>
+                            <mxPoint x="740" y="740"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="x_pos_err" value="MechPositionInCtrl（圈）" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#F57F17;fontColor=#F57F17;dashed=1;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.297;entryY=-0.002;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="s_mech" target="pos_err" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1234" y="634"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="x_spd_iq" value="Iq_Ref（speedPIDCal.Output）" style="fontSize=9;html=1;strokeColor=#2E7D32;fontColor=#2E7D32;dashed=1;strokeWidth=2;exitX=0.001;exitY=0.525;exitDx=0;exitDy=0;entryX=1.002;entryY=0.432;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" parent="1" source="spd_pid" target="c_pid" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="774.99" y="852.5" as="sourcePoint"/>
+                        <mxPoint x="575.3900000000001" y="856.396" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="x_pos_spd" value="SpeedReq（positionPIDcal.Output）" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#6A1B9A;fontColor=#6A1B9A;dashed=1;strokeWidth=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="pos_pid" target="spd_err" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1140" y="855"/>
+                            <mxPoint x="1100" y="855"/>
+                            <mxPoint x="1100" y="740"/>
+                            <mxPoint x="1000" y="740"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="x_asw_spd" value="SpeedInCtrl_Req" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#C62828;fontColor=#C62828;" parent="1" source="asw_spd" target="spd_err" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="875" y="390"/>
+                            <mxPoint x="875" y="390"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="x_asw_pos" value="MechPositionInCtrl_Req" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#C62828;fontColor=#C62828;" parent="1" source="asw_pos" target="pos_err" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1275" y="270"/>
+                            <mxPoint x="1275" y="270"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="x_asw_iq" value="Iq_Ref（力矩模式）" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#C62828;fontColor=#C62828;dashed=1;" parent="1" source="asw_iq" target="c_pid" edge="1">
+                    <mxGeometry x="0.0366" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="610" y="173"/>
+                            <mxPoint x="610" y="840"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="x_duty_adc" value="pwmDutys[]（扇区选相，一拍延迟）" style="edgeStyle=orthogonalEdgeStyle;fontSize=9;html=1;strokeColor=#9E9E9E;fontColor=#757575;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="c_svpwm" target="c_adc" edge="1">
+                    <mxGeometry x="0.0396" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="350" y="970"/>
+                            <mxPoint x="350" y="260"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="leg_title" value="图例" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="1160" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg1" value="电流环（100μs）" style="rounded=1;fillColor=#E3F2FD;strokeColor=#1565C0;fontSize=10;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="1185" width="160" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg2" value="速度环（1ms）" style="rounded=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=10;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="275" y="1185" width="150" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg3" value="位置环（5ms）" style="rounded=1;fillColor=#F3E5F5;strokeColor=#6A1B9A;fontSize=10;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="1185" width="150" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg4" value="传感器关键输出" style="rounded=1;fillColor=#FFE082;strokeColor=#F9A825;fontSize=10;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="605" y="1185" width="150" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg5" value="外部指令（ASW/CAN）" style="rounded=1;fillColor=#FCE4EC;strokeColor=#C62828;fontColor=#B71C1C;fontSize=10;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="770" y="1185" width="175" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg6" value="PWM硬件输出" style="rounded=1;fillColor=#B71C1C;strokeColor=#7F0000;fontColor=#ffffff;fontSize=10;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="1185" width="140" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="notes" value="&lt;b&gt;说明：&lt;/b&gt;① 虚橙线 = 传感器值注入控制环（跨泳道）② 虚绿/紫线 = 环间级联（位置→速度→电流）③ 虚灰线 = pwmDutys[]反馈回采样（扇区选相，一拍延迟）④ 力矩模式可旁路速度环直接给定Iq_Ref&lt;br&gt;&lt;font color=&#39;#C62828&#39;&gt;⑤ PositionMode 下 ISR 主循环会调用 PosSelfLock()（位置自锁/防卡滞保护）&lt;/font&gt;&lt;br&gt;&lt;font color=&#39;#C62828&#39;&gt;⑥ 电流请求在进入 FOC 电流环前需经过三层限流链：连接器电流限值、热保护限流、故障状态降额限流&lt;/font&gt;" style="rounded=1;fillColor=#FFF3E0;strokeColor=#E65100;fontSize=10;verticalAlign=middle;html=1;align=left;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="1225" width="1400" height="88" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_3lv_01" value="MOD-3LV-01" style="text;html=1;strokeColor=#C62828;fillColor=#FFEBEE;align=center;fontSize=8;fontStyle=1;fontColor=#C62828;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="580" y="780" width="78" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="mod_3lv_02" value="MOD-3LV-02" style="text;html=1;strokeColor=#C62828;fillColor=#FFEBEE;align=center;fontSize=8;fontStyle=1;fontColor=#C62828;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="1270" width="78" height="16" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#fff2cc;strokeColor=#F9A825;" parent="1" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="100" y="560" as="sourcePoint"/>
+                        <mxPoint x="115" y="560" as="targetPoint"/>
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
