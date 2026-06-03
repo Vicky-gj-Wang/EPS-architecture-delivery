@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>��֤�ع���ɹ۲���</title>
+  <link rel="stylesheet" href="eps-topic-shell.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="side">
+      <h1 id="topicName">ר��ҳ</h1>
+      <p id="topicSummary" class="sub"></p>
+      <div id="tagWrap" style="margin-top: 8px;"></div>
+
+      <div class="group">
+        <h3>ר�ⶨλ</h3>
+        <div class="kv">
+          <div>������·��<strong id="phaseText">-</strong></div>
+          <div>Ŀ�꣺<span id="goalText">-</span></div>
+          <div>���룺<span id="inText">-</span></div>
+          <div>�����<span id="outText">-</span></div>
+          <div>�Ķ���ڣ�<span id="entryText">-</span></div>
+          <div>��Ҫ���գ�<span id="riskText">-</span></div>
+          <div>��֤���飺<span id="verifyText">-</span></div>
+        </div>
+      </div>
+
+      <div class="group ctrl">
+        <h3>��ͼ����</h3>
+        <select id="modeFilter">
+          <option value="all">ȫ���ڵ�</option>
+          <option value="input">������·</option>
+          <option value="logic">�߼�����</option>
+          <option value="act">ִ�ж���</option>
+          <option value="timing">ʱ��/�ж�</option>
+          <option value="feedback">������·</option>
+          <option value="diag">��ϼ�¼</option>
+        </select>
+        <label class="ck"><input id="toggleLabels" type="checkbox" checked /> ��ʾ���߱�ǩ</label>
+        <label class="ck"><input id="toggleRisk" type="checkbox" /> ��������·��</label>
+        <label class="ck"><input id="toggleTiming" type="checkbox" checked /> ��ʾʱ��Ӿ��</label>
+      </div>
+
+      <div class="group">
+        <a class="link" href="../eps-functional-architecture-overview.html" target="_blank" rel="noopener">��������ҳ</a>
+        <br />
+        <a id="topicLink" class="link" href="#" style="display:none;">����ʵ��ר��ҳ</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="head">
+        <div class="tt">ר��Ǽ���ͼ</div>
+        <div class="desc">��ҳΪ��һ��Ǽܣ��ȹ̶��ṹ�뽻���������滻Ϊ����֤�ݼ�ͼ�ס�</div>
+      </header>
+
+      <div class="toolbar">
+        <button id="zoomOut" class="btn" type="button">-</button>
+        <input id="zoomRange" type="range" min="60" max="320" step="5" value="100" />
+        <button id="zoomIn" class="btn" type="button">+</button>
+        <button id="zoomReset" class="btn" type="button">����</button>
+        <span id="zoomText" class="zoom-text">100%</span>
+      </div>
+
+      <div class="canvas-wrap">
+        <svg id="diagramSvg" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <footer class="meta" id="footText"></footer>
+    </main>
+  </div>
+
+  <script>
+    window.TOPIC_META = {
+      name: "验证回归与可观测性",
+      summary: "按功能逻辑将变更从受理、执行、判定到版本冻结闭环化。",
+      goal: "每次改动都能留下可复核证据，定位路径可回放、结论可追溯。",
+      inputs: "需求变更单、影响模块清单、测试用例池、运行时观测点定义。",
+      outputs: "回归判定结论、根因证据链、发布门禁结果、版本追溯记录。",
+      entry: "先锁定影响功能链，再定义观测点与阈值，最后编排执行计划。",
+      risk: "颗粒度过粗会导致异常归因不准；观测点缺失会让问题不可复现。",
+      verify: "功能链完整性 + 实时性 + 故障注入 + 发布门禁四层验证。",
+      phase: "架构支撑链",
+      tags: ["Validation", "Observability", "Regression"],
+      diagramType: "matrix-grid",
+
+      codeNodes: [
+        "Code/EPS Code/TC233_Module_Test/Source/AswInterfaceTest/src/interface_test.c",
+        "Code/EPS Code/TC233_Module_Test/Source/AswInterfaceTest/src/Asw_DiagInterface.c",
+        "Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/TaskSchedule.c",
+        "Code/EPS Code/communication_stack_module/src/0_App/src/UDS/FaultManager/FaultMCfg.c",
+        "Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/MotorControlPInterface.c"
+      ],
+      keyCalls: [
+        "InterfaceTest_RunAll: 按编排顺序执行并记录结果",
+        "AswDiagInterface_Report: 聚合异常证据并输出定位索引",
+        "TaskSchedule_RuntimeMonitor: 输出周期抖动与执行窗口统计",
+        "FaultM_UpdateDtcStatus: 将故障状态映射为门禁条件"
+      ],
+      boundaries: [
+        "观测点采样不能侵占控制关键 ISR 预算",
+        "日志与上报开关不得改变原有调度行为",
+        "回归结论必须绑定软件版本与参数版本"
+      ],
+      checks: [
+        "检查1: 影响功能链是否完整覆盖（输入到门禁）",
+        "检查2: 观测点与阈值是否可复现异常",
+        "检查3: 实时性指标是否在预算内（WCET/抖动）",
+        "检查4: 根因归因是否能追溯到函数锚点",
+        "检查5: 门禁结论与版本冻结记录是否一致"
+      ],
+      flowNodes: [
+        { x: 100, y: 110, w: 220, h: 72, title: "变更受理与归类", mode: "input", risk: false, details: ["需求单与缺陷单合并入口", "标注功能域与优先级"] },
+        { x: 390, y: 110, w: 220, h: 72, title: "影响功能链分解", mode: "logic", risk: false, details: ["拆分输入-处理-输出链", "形成最小回归边界"] },
+        { x: 680, y: 110, w: 220, h: 72, title: "观测点与阈值定义", mode: "logic", risk: false, details: ["绑定采样变量与触发阈值", "约束采样频率与窗口"] },
+        { x: 970, y: 110, w: 220, h: 72, title: "用例池映射", mode: "act", risk: false, details: ["功能链对应测试用例", "缺口用例即时补齐"] },
+
+        { x: 100, y: 300, w: 220, h: 72, title: "自动执行编排", mode: "act", risk: false, details: ["按优先级生成执行计划", "串并行策略自动分配"] },
+        { x: 390, y: 300, w: 220, h: 72, title: "运行时采样", mode: "timing", risk: true, details: ["采集周期抖动与执行时长", "记录关键变量时间序列"] },
+        { x: 680, y: 300, w: 220, h: 72, title: "异常触发捕获", mode: "feedback", risk: true, details: ["阈值越界即时抓取上下文", "生成异常快照编号"] },
+        { x: 970, y: 300, w: 220, h: 72, title: "根因定位与归因", mode: "feedback", risk: false, details: ["异常快照关联函数锚点", "输出根因证据链"] },
+
+        { x: 100, y: 490, w: 220, h: 72, title: "修复项回写", mode: "logic", risk: false, details: ["修复代码与参数回写", "同步更新观测配置"] },
+        { x: 390, y: 490, w: 220, h: 72, title: "回归复跑与对比", mode: "diag", risk: false, details: ["新旧结果差异对比", "确认风险消减程度"] },
+        { x: 680, y: 490, w: 220, h: 72, title: "发布门禁评审", mode: "diag", risk: false, details: ["功能/实时/故障三门禁", "汇总通过与阻断原因"] },
+        { x: 970, y: 490, w: 220, h: 72, title: "版本冻结与追溯", mode: "diag", risk: false, details: ["冻结软件与参数版本", "沉淀可追溯发布证据"] }
+      ],
+      flowEdges: [
+        [320, 143, 390, 143, "需求变更进入功能分析"],
+        [610, 143, 680, 143, "影响链驱动观测点定义"],
+        [900, 143, 970, 143, "观测点驱动选例映射"],
+        [1080, 176, 210, 300, "选例结果生成执行计划"],
+
+        [320, 333, 390, 333, "执行过程中实时采样"],
+        [610, 333, 680, 333, "阈值越界触发异常捕获"],
+        [900, 333, 970, 333, "异常证据进入根因归因"],
+        [1080, 366, 210, 523, "归因结论回写修复项"],
+
+        [320, 523, 390, 523, "修复构建触发回归复跑"],
+        [610, 523, 680, 523, "回归结果进入发布门禁"],
+        [900, 523, 970, 523, "门禁通过后冻结版本"],
+
+        [1080, 300, 790, 176, "根因反哺观测点策略"],
+        [1080, 490, 210, 176, "版本经验回灌需求分类"],
+        [500, 366, 500, 490, "实时指标并入回归对比"]
+      ],
+      functionAnchors: [
+        "1) Code/EPS Code/TC233_Module_Test/Source/AswInterfaceTest/src/interface_test.c :: InterfaceTest_RunAll",
+        "2) Code/EPS Code/TC233_Module_Test/Source/AswInterfaceTest/src/Asw_DiagInterface.c :: AswDiagInterface_Report",
+        "3) Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/TaskSchedule.c :: TaskSchedule_RuntimeMonitor",
+        "4) Code/EPS Code/communication_stack_module/src/0_App/src/UDS/FaultManager/FaultMCfg.c :: FaultM_UpdateDtcStatus"
+      ],
+      searchKeywords: ["validation gate", "observability", "runtime monitor", "root cause", "regression replay", "fault dtc"],
+      foot: "功能逻辑说明：本图按输入、分析、执行、采样、归因、修复、门禁、冻结的闭环顺序组织，所有反馈箭头均表示可追溯反哺路径。",
+      stateMachineLink: ""
+    };
+  </script>
+  <script src="eps-topic-shell.js?v=20260526-07"></script>
+</body>
+</html>
+
+
+

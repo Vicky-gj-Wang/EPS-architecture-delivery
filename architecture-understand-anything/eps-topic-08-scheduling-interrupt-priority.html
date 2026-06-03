@@ -1,0 +1,689 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>调度时序与中断优先级</title>
+  <style>
+    :root {
+      --bg: #eef3f8;
+      --line: #d3deea;
+      --ink: #10263d;
+      --muted: #4b6077;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, #dceefb 0%, rgba(220, 238, 251, 0) 35%),
+        radial-gradient(circle at 88% 12%, #e3f8ef 0%, rgba(227, 248, 239, 0) 32%),
+        var(--bg);
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1fr);
+      gap: 14px;
+      min-height: 100vh;
+      padding: 14px;
+    }
+
+    .side,
+    .main {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      backdrop-filter: blur(4px);
+    }
+
+    .side {
+      padding: 14px;
+      position: sticky;
+      top: 14px;
+      height: calc(100vh - 28px);
+      overflow: auto;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: 24px;
+      line-height: 1.2;
+      letter-spacing: 0.2px;
+    }
+
+    .sub {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .group {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      background: #fbfdff;
+    }
+
+    .group h3 {
+      font-size: 13px;
+      color: #1a3f64;
+      margin-bottom: 8px;
+    }
+
+    .kv {
+      display: grid;
+      gap: 6px;
+      font-size: 12px;
+      color: #2c4a67;
+      line-height: 1.45;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      border: 1px solid #c7dff4;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      color: #1f4768;
+      background: #f2f8ff;
+    }
+
+    .ctrl {
+      display: grid;
+      gap: 8px;
+    }
+
+    .ck {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #274766;
+    }
+
+    .tool-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .tool-btn {
+      border: 1px solid #b8d2ea;
+      background: #f2f8ff;
+      color: #104d84;
+      border-radius: 8px;
+      padding: 5px 9px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .link {
+      text-decoration: none;
+      color: #0e4f89;
+      font-size: 12px;
+    }
+
+    .main {
+      padding: 14px;
+      overflow: auto;
+    }
+
+    .head {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: linear-gradient(120deg, #eaf6ff, #e9fcf4);
+      padding: 12px;
+    }
+
+    .head .tt {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .head .desc {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .canvas-wrap {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      overflow: auto;
+    }
+
+    .timeline {
+      display: block;
+      width: 100%;
+      min-width: 1720px;
+      height: auto;
+      background: #fff;
+    }
+
+    .foot {
+      margin-top: 10px;
+      border: 1px solid #cfdde9;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 10px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #2a4866;
+    }
+
+    @media (max-width: 1200px) {
+      .shell { grid-template-columns: 1fr; }
+      .side { position: static; height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="side">
+      <h1>调度时序与中断优先级</h1>
+      <p class="sub">本页按功能逻辑组织时序：事件源采样 -> ISR 快路径 -> OS 释放任务 -> 周期任务执行 -> 实时性监控告警。</p>
+
+      <div class="group">
+        <h3>功能逻辑链</h3>
+        <div class="kv">
+          <div>1) <strong>事件源</strong>：PWM 周期、STM Tick、ADC/SENT/CAN 中断触发。</div>
+          <div>2) <strong>ISR 快路径</strong>：采样、解码、置位事件，不做重计算。</div>
+          <div>3) <strong>OS 调度</strong>：根据 Tick 释放 1ms/2ms/5ms/10ms 任务。</div>
+          <div>4) <strong>任务层</strong>：控制、诊断、通信慢路径按优先级执行。</div>
+          <div>5) <strong>监控层</strong>：WCET、抖动、调度余量持续评估。</div>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3>优先级语义</h3>
+        <div class="chips">
+          <span class="chip" style="background:#f7d6d6;">控制关键 ISR</span>
+          <span class="chip" style="background:#dce7f9;">采样/节拍 ISR</span>
+          <span class="chip" style="background:#e8dcf6;">通信 ISR</span>
+          <span class="chip" style="background:#e1f0df;">OS 任务</span>
+          <span class="chip" style="background:#f1e6ce;">监控与告警</span>
+        </div>
+      </div>
+
+      <div class="group ctrl">
+        <h3>显示控制</h3>
+        <label class="ck"><input id="toggleIsr" type="checkbox" checked /> 显示 ISR 泳道</label>
+        <label class="ck"><input id="toggleOs" type="checkbox" checked /> 显示 OS/任务泳道</label>
+        <label class="ck"><input id="toggleLinks" type="checkbox" checked /> 显示逻辑关联箭头</label>
+        <label class="ck"><input id="toggleNotes" type="checkbox" checked /> 显示验证说明</label>
+        <label class="ck"><input id="toggleEditMode" type="checkbox" /> 临时编辑模式（拖拽任务块）</label>
+        <div class="tool-row">
+          <button id="resetViewBtn" class="tool-btn" type="button">重置视图</button>
+          <button id="relayoutLabelsBtn" class="tool-btn" type="button">重排标签</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <a class="link" href="../eps-functional-architecture-overview.html" target="_blank" rel="noopener">返回总览页</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="head">
+        <div class="tt">EPS 调度时序图</div>
+        <div class="desc">时间窗 4ms，主刻度 1ms。按控制链职责拆解：谁触发、谁抢占、谁释放、谁执行、谁监控。</div>
+      </header>
+
+      <div class="canvas-wrap">
+        <svg id="timelineSvg" class="timeline" viewBox="0 0 1720 980" preserveAspectRatio="xMinYMin meet"></svg>
+      </div>
+
+      <div id="notesBox" class="foot">
+        <div><strong>验证项 A</strong>：FOC ISR 在预算窗口内运行，避免被慢路径阻塞。</div>
+        <div><strong>验证项 B</strong>：1ms 控制任务每周期释放，2ms/5ms/10ms 按节拍触发。</div>
+        <div><strong>验证项 C</strong>：CAN RX 触发诊断任务并反馈至 CAN TX。</div>
+        <div><strong>验证项 D</strong>：WCET、抖动、调度余量可记录并可回放。</div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+    const svg = document.getElementById("timelineSvg");
+    const NS = "http://www.w3.org/2000/svg";
+    const axisLeft = 360;
+    const axisRight = 1600;
+    const laneTop = 92;
+    const rowH = 40;
+    const rowGap = 4;
+    const tMax = 4.0;
+    let relayoutTick = 0;
+    let editMode = false;
+    let dragState = null;
+
+    const lanes = [
+      { id: "isr_foc", band: "isr", bg: "#f3d6d6", label: "ISR-FOC (高优先)", desc: "10kHz FOC 核心闭环，预算最严格" },
+      { id: "isr_tick", band: "isr", bg: "#d9e4f8", label: "ISR-STM Tick", desc: "500us 节拍，驱动 OS 计数与释放" },
+      { id: "isr_adc", band: "isr", bg: "#dce8fb", label: "ISR-ADC Sample", desc: "采样就绪、标志置位、快路径处理" },
+      { id: "isr_sent", band: "isr", bg: "#d5e9e9", label: "ISR-SENT Decode", desc: "位置帧解码，供任务层消费" },
+      { id: "isr_can_rx", band: "isr", bg: "#e8dcf6", label: "ISR-CAN RX", desc: "报文接收快路径，事件入队" },
+      { id: "isr_can_tx", band: "isr", bg: "#e5daf4", label: "ISR-CAN TX", desc: "发送完成中断与状态回写" },
+      { id: "os_sched", band: "os", bg: "#e2efd9", label: "OS 调度释放", desc: "根据 Tick 释放周期任务" },
+      { id: "task_1ms", band: "os", bg: "#deebd8", label: "Task 1ms 控制链", desc: "状态机 + 控制输入整形" },
+      { id: "task_2ms", band: "os", bg: "#e4efd8", label: "Task 2ms 信号链", desc: "位置/滤波/估算慢路径" },
+      { id: "task_5ms", band: "os", bg: "#e9efd7", label: "Task 5ms 诊断链", desc: "诊断计算与故障评估" },
+      { id: "task_10ms", band: "os", bg: "#efe8d3", label: "Task 10ms 服务链", desc: "通信会话与服务任务" },
+      { id: "task_bg", band: "os", bg: "#dfdfdf", label: "Background", desc: "剩余配额执行慢任务" },
+      { id: "monitor", band: "os", bg: "#f3ecd9", label: "监控与告警", desc: "WCET/抖动/余量监控与阈值告警" }
+    ];
+
+    const bars = [];
+    const barDefaults = [];
+    const links = [];
+
+    function addPeriodic(laneId, start, period, count, width, color, label) {
+      for (let i = 0; i < count; i++) {
+        bars.push({ laneId, start: start + i * period, end: start + i * period + width, color, label });
+      }
+    }
+
+    function addBar(laneId, start, end, color, label) {
+      bars.push({ laneId, start, end, color, label });
+    }
+
+    function addLink(fromLane, fromTime, toLane, toTime, label, color) {
+      links.push({ fromLane, fromTime, toLane, toTime, label, color: color || "#6a7f92" });
+    }
+
+    addPeriodic("isr_foc", 0.0, 0.1, 40, 0.02, "#b11b1b", "FOC");
+    addPeriodic("isr_tick", 0.0, 0.5, 9, 0.03, "#1f67be", "Tick");
+    addPeriodic("isr_adc", 0.04, 0.1, 40, 0.014, "#0074c9", "ADC");
+    addPeriodic("isr_sent", 0.0, 1.0, 5, 0.04, "#0d7f72", "SENT");
+
+    addBar("isr_can_rx", 0.36, 0.52, "#6220a8", "CAN RX");
+    addBar("isr_can_rx", 2.22, 2.38, "#6220a8", "CAN RX");
+    addBar("isr_can_tx", 1.32, 1.46, "#3a33a8", "CAN TX");
+    addBar("isr_can_tx", 3.08, 3.22, "#3a33a8", "CAN TX");
+
+    addBar("os_sched", 0.98, 1.10, "#2c8e2f", "Release@1ms");
+    addBar("os_sched", 1.98, 2.10, "#2c8e2f", "Release@2ms");
+    addBar("os_sched", 2.98, 3.10, "#2c8e2f", "Release@3ms");
+
+    addBar("task_1ms", 1.08, 1.34, "#2f9a38", "State+Ctrl 1ms");
+    addBar("task_1ms", 2.08, 2.34, "#2f9a38", "State+Ctrl 1ms");
+    addBar("task_1ms", 3.08, 3.34, "#2f9a38", "State+Ctrl 1ms");
+
+    addBar("task_2ms", 1.20, 1.52, "#4aaa52", "Signal 2ms");
+    addBar("task_2ms", 3.20, 3.52, "#4aaa52", "Signal 2ms");
+
+    addBar("task_5ms", 0.64, 1.04, "#8e7f15", "Diag 5ms");
+    addBar("task_10ms", 2.34, 2.78, "#927f2b", "Service 10ms");
+
+    addBar("task_bg", 0.00, 0.60, "#666", "Background");
+    addBar("task_bg", 1.56, 1.92, "#666", "Background");
+    addBar("task_bg", 2.80, 2.96, "#666", "Background");
+    addBar("task_bg", 3.56, 4.00, "#666", "Background");
+
+    addBar("monitor", 1.40, 1.66, "#bf6b00", "WCET scan");
+    addBar("monitor", 3.40, 3.66, "#bf6b00", "Jitter scan");
+    addBar("monitor", 3.68, 3.90, "#a71313", "Margin alert");
+
+    addLink("isr_tick", 1.0, "os_sched", 1.02, "节拍驱动释放");
+    addLink("isr_tick", 2.0, "os_sched", 2.02, "节拍驱动释放");
+    addLink("isr_tick", 3.0, "os_sched", 3.02, "节拍驱动释放");
+
+    addLink("os_sched", 1.06, "task_1ms", 1.10, "release");
+    addLink("os_sched", 2.06, "task_1ms", 2.10, "release");
+    addLink("os_sched", 3.06, "task_1ms", 3.10, "release");
+
+    addLink("isr_adc", 1.00, "task_1ms", 1.14, "采样输入");
+    addLink("isr_sent", 1.00, "task_2ms", 1.22, "位置输入");
+    addLink("isr_can_rx", 0.46, "task_5ms", 0.70, "报文触发");
+    addLink("task_5ms", 0.98, "isr_can_tx", 1.34, "响应输出");
+    addLink("isr_foc", 3.60, "monitor", 3.72, "执行时长统计", "#8a4f0f");
+
+    bars.forEach((b) => {
+      barDefaults.push({ start: b.start, end: b.end });
+    });
+
+    function tx(ms) {
+      return axisLeft + (ms / tMax) * (axisRight - axisLeft);
+    }
+
+    function laneY(idx) {
+      return laneTop + idx * (rowH + rowGap);
+    }
+
+    function laneIndexById(id) {
+      return lanes.findIndex((x) => x.id === id);
+    }
+
+    function create(tag, attrs, text) {
+      const node = document.createElementNS(NS, tag);
+      if (attrs) Object.keys(attrs).forEach((k) => node.setAttribute(k, attrs[k]));
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function drawBase() {
+      svg.innerHTML = "";
+
+      svg.appendChild(create("defs", null));
+      const defs = svg.querySelector("defs");
+      const marker = create("marker", {
+        id: "arr",
+        markerWidth: "10",
+        markerHeight: "10",
+        refX: "8",
+        refY: "3",
+        orient: "auto"
+      });
+      marker.appendChild(create("path", { d: "M0,0 L8,3 L0,6 Z", fill: "#6a7f92" }));
+      defs.appendChild(marker);
+
+      svg.appendChild(create("rect", {
+        x: 10, y: 10, width: 1700, height: 960, rx: 10,
+        fill: "#fff", stroke: "#bacddd"
+      }));
+
+      svg.appendChild(create("text", {
+        x: 860, y: 32, "text-anchor": "middle", "font-size": "21", "font-weight": "700", fill: "#0d2540"
+      }, "EPS 调度时序与中断优先级（功能逻辑版） | 4ms 观测窗 | 1ms=310px"));
+
+      svg.appendChild(create("rect", {
+        x: axisLeft, y: 50, width: axisRight - axisLeft, height: 28,
+        fill: "#f2f4f7", stroke: "#b5c7d7"
+      }));
+
+      svg.appendChild(create("text", {
+        x: (axisLeft + axisRight) / 2, y: 69,
+        "text-anchor": "middle", "font-size": "13", "font-weight": "700", fill: "#223e59"
+      }, "时间轴：0ms -> 4ms（虚线 0.5ms，实线 1ms）"));
+
+      for (let ms = 0; ms <= 4; ms += 0.5) {
+        const major = Number.isInteger(ms);
+        const x = tx(ms);
+        svg.appendChild(create("line", {
+          x1: x, y1: 78, x2: x, y2: 910,
+          stroke: major ? "#4b6178" : "#a2b6c8",
+          "stroke-width": major ? 1.5 : 1,
+          "stroke-dasharray": major ? "" : "5 4"
+        }));
+        if (major) {
+          svg.appendChild(create("text", {
+            x, y: 45, "text-anchor": "middle", "font-size": "12", "font-weight": "700", fill: "#1f3d5a"
+          }, `${ms}ms`));
+        }
+      }
+
+      lanes.forEach((lane, idx) => {
+        const y = laneY(idx);
+        svg.appendChild(create("rect", {
+          x: 18, y, width: 1682, height: rowH,
+          fill: lane.bg, stroke: "#c5d4e0"
+        }));
+
+        svg.appendChild(create("line", {
+          x1: axisLeft, y1: y, x2: axisLeft, y2: y + rowH,
+          stroke: "#70879b", "stroke-width": "1.2"
+        }));
+
+        svg.appendChild(create("text", {
+          x: 28, y: y + 15, "font-size": "12", "font-weight": "700", fill: "#0d2540"
+        }, lane.label));
+
+        svg.appendChild(create("text", {
+          x: 28, y: y + 30, "font-size": "11", fill: "#35526b"
+        }, lane.desc));
+
+        if (lane.band === "os") {
+          svg.appendChild(create("rect", { x: 18, y, width: 4, height: rowH, fill: "#5c7f3a" }));
+        }
+      });
+
+      const splitY = laneY(laneIndexById("os_sched")) - 6;
+      svg.appendChild(create("line", {
+        x1: 18, y1: splitY, x2: 1700, y2: splitY,
+        stroke: "#334", "stroke-width": "1.5", "stroke-dasharray": "8 8"
+      }));
+
+      svg.appendChild(create("text", {
+        x: 860, y: splitY + 16, "text-anchor": "middle", "font-size": "12", fill: "#111"
+      }, "任务层（由 OS Tick 释放，受 ISR 抢占）"));
+    }
+
+    function drawBars() {
+      bars.forEach((b, barIdx) => {
+        const laneIdx = laneIndexById(b.laneId);
+        if (laneIdx < 0) return;
+
+        const y = laneY(laneIdx) + 4;
+        const x = tx(b.start);
+        const w = Math.max(3, tx(b.end) - tx(b.start));
+
+        const group = create("g", {
+          class: "editable-bar",
+          "data-bar-idx": String(barIdx),
+          cursor: editMode ? "grab" : "default"
+        });
+
+        group.appendChild(create("rect", {
+          x, y, width: w, height: rowH - 8,
+          fill: b.color,
+          stroke: "rgba(0,0,0,0.35)",
+          "stroke-width": "0.6",
+          rx: "2"
+        }));
+
+        if (w > 60) {
+          group.appendChild(create("text", {
+            x: x + w / 2,
+            y: y + (rowH - 8) / 2 + 4,
+            "text-anchor": "middle",
+            "font-size": "10",
+            "font-weight": "700",
+            fill: b.color === "#f5efe8" ? "#8f1a1a" : "#fff"
+          }, b.label));
+        }
+
+        svg.appendChild(group);
+      });
+    }
+
+    function drawLinks() {
+      const placed = [];
+      const offsets = [0, 12, -12, 24, -24, 36, -36];
+
+      function overlaps(a, b) {
+        return !(a.x + a.w < b.x || b.x + b.w < a.x || a.y + a.h < b.y || b.y + b.h < a.y);
+      }
+
+      function pickLabelY(baseX, baseY, text) {
+        let bestY = baseY;
+        let bestPenalty = Number.POSITIVE_INFINITY;
+
+        offsets.forEach((off, idx) => {
+          const rIdx = (idx + relayoutTick) % offsets.length;
+          const y = baseY + offsets[rIdx];
+          const rect = {
+            x: baseX - Math.max(36, text.length * 3.2),
+            y: y - 12,
+            w: Math.max(72, text.length * 6.4),
+            h: 14
+          };
+          const hit = placed.some((p) => overlaps(rect, p));
+          const penalty = Math.abs(off) + (hit ? 1000 : 0);
+          if (penalty < bestPenalty) {
+            bestPenalty = penalty;
+            bestY = y;
+          }
+        });
+
+        placed.push({
+          x: baseX - Math.max(36, text.length * 3.2),
+          y: bestY - 12,
+          w: Math.max(72, text.length * 6.4),
+          h: 14
+        });
+
+        return bestY;
+      }
+
+      links.forEach((l) => {
+        const fromIdx = laneIndexById(l.fromLane);
+        const toIdx = laneIndexById(l.toLane);
+        if (fromIdx < 0 || toIdx < 0) return;
+
+        const x1 = tx(l.fromTime);
+        const y1 = laneY(fromIdx) + rowH - 4;
+        const x2 = tx(l.toTime);
+        const y2 = laneY(toIdx) + 4;
+        const midY = y1 + (y2 - y1) * 0.5;
+
+        const d = `M${x1},${y1} C${x1},${midY} ${x2},${midY} ${x2},${y2}`;
+        svg.appendChild(create("path", {
+          d,
+          fill: "none",
+          stroke: l.color,
+          "stroke-width": "1.2",
+          "stroke-dasharray": "4 3",
+          "marker-end": "url(#arr)",
+          class: "logic-link"
+        }));
+
+        svg.appendChild(create("text", {
+          x: (x1 + x2) / 2,
+          y: pickLabelY((x1 + x2) / 2, midY - 3, l.label),
+          "text-anchor": "middle",
+          "font-size": "10",
+          fill: l.color,
+          class: "logic-link logic-link-label",
+          stroke: "rgba(255,255,255,0.95)",
+          "stroke-width": "3",
+          "paint-order": "stroke"
+        }, l.label));
+      });
+    }
+
+    function relayoutLinkLabels() {
+      relayoutTick += 1;
+      redraw();
+    }
+
+    function applyMasks() {
+      const hideIsr = !document.getElementById("toggleIsr").checked;
+      const hideOs = !document.getElementById("toggleOs").checked;
+
+      lanes.forEach((lane, idx) => {
+        if ((lane.band === "isr" && hideIsr) || (lane.band === "os" && hideOs)) {
+          svg.appendChild(create("rect", {
+            x: 18,
+            y: laneY(idx),
+            width: 1682,
+            height: rowH,
+            fill: "rgba(255,255,255,0.86)"
+          }));
+        }
+      });
+
+      const showLinks = document.getElementById("toggleLinks").checked;
+      svg.querySelectorAll(".logic-link").forEach((n) => {
+        n.style.display = showLinks ? "block" : "none";
+      });
+
+      document.getElementById("notesBox").style.display = document.getElementById("toggleNotes").checked ? "block" : "none";
+    }
+
+    function redraw() {
+      drawBase();
+      drawBars();
+      drawLinks();
+      applyMasks();
+    }
+
+    function pxToMs(deltaPx) {
+      return (deltaPx / (axisRight - axisLeft)) * tMax;
+    }
+
+    function restoreBarDefaults() {
+      bars.forEach((b, i) => {
+        b.start = barDefaults[i].start;
+        b.end = barDefaults[i].end;
+      });
+    }
+
+    svg.addEventListener("mousedown", (event) => {
+      if (!editMode) return;
+
+      const target = event.target.closest ? event.target.closest(".editable-bar") : null;
+      if (!target) return;
+
+      const barIdx = Number(target.getAttribute("data-bar-idx"));
+      if (!Number.isInteger(barIdx) || !bars[barIdx]) return;
+
+      dragState = {
+        barIdx,
+        startX: event.clientX,
+        originStart: bars[barIdx].start,
+        originEnd: bars[barIdx].end
+      };
+      event.preventDefault();
+    });
+
+    window.addEventListener("mousemove", (event) => {
+      if (!dragState) return;
+
+      const bar = bars[dragState.barIdx];
+      const duration = dragState.originEnd - dragState.originStart;
+      let newStart = dragState.originStart + pxToMs(event.clientX - dragState.startX);
+      newStart = Math.max(0, Math.min(tMax - duration, newStart));
+
+      bar.start = Number(newStart.toFixed(4));
+      bar.end = Number((newStart + duration).toFixed(4));
+      redraw();
+    });
+
+    window.addEventListener("mouseup", () => {
+      dragState = null;
+    });
+
+    ["toggleIsr", "toggleOs", "toggleLinks", "toggleNotes"].forEach((id) => {
+      document.getElementById(id).addEventListener("change", redraw);
+    });
+
+    document.getElementById("toggleEditMode").addEventListener("change", (event) => {
+      editMode = event.target.checked;
+      redraw();
+    });
+
+    document.getElementById("resetViewBtn").addEventListener("click", () => {
+      document.getElementById("toggleIsr").checked = true;
+      document.getElementById("toggleOs").checked = true;
+      document.getElementById("toggleLinks").checked = true;
+      document.getElementById("toggleNotes").checked = true;
+      document.getElementById("toggleEditMode").checked = false;
+      editMode = false;
+      restoreBarDefaults();
+      redraw();
+    });
+
+    document.getElementById("relayoutLabelsBtn").addEventListener("click", relayoutLinkLabels);
+
+    redraw();
+    })();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>���������źŴ�����</title>
+  <link rel="stylesheet" href="eps-topic-shell.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="side">
+      <h1 id="topicName">ר��ҳ</h1>
+      <p id="topicSummary" class="sub"></p>
+      <div id="tagWrap" style="margin-top: 8px;"></div>
+
+      <div class="group">
+        <h3>ר�ⶨλ</h3>
+        <div class="kv">
+          <div>������·��<strong id="phaseText">-</strong></div>
+          <div>Ŀ�꣺<span id="goalText">-</span></div>
+          <div>���룺<span id="inText">-</span></div>
+          <div>�����<span id="outText">-</span></div>
+          <div>�Ķ���ڣ�<span id="entryText">-</span></div>
+          <div>��Ҫ���գ�<span id="riskText">-</span></div>
+          <div>��֤���飺<span id="verifyText">-</span></div>
+        </div>
+      </div>
+
+      <div class="group ctrl">
+        <h3>��ͼ����</h3>
+        <select id="modeFilter">
+          <option value="all">ȫ���ڵ�</option>
+          <option value="input">������·</option>
+          <option value="logic">�߼�����</option>
+          <option value="act">ִ�ж���</option>
+          <option value="timing">ʱ��/�ж�</option>
+          <option value="feedback">������·</option>
+          <option value="diag">��ϼ�¼</option>
+        </select>
+        <label class="ck"><input id="toggleLabels" type="checkbox" checked /> ��ʾ���߱�ǩ</label>
+        <label class="ck"><input id="toggleRisk" type="checkbox" /> ��������·��</label>
+        <label class="ck"><input id="toggleTiming" type="checkbox" checked /> ��ʾʱ��Ӿ��</label>
+      </div>
+
+      <div class="group">
+        <a class="link" href="../eps-functional-architecture-overview.html" target="_blank" rel="noopener">��������ҳ</a>
+        <br />
+        <a id="topicLink" class="link" href="#" style="display:none;">����ʵ��ר��ҳ</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="head">
+        <div class="tt">ר��Ǽ���ͼ</div>
+        <div class="desc">��ҳΪ��һ��Ǽܣ��ȹ̶��ṹ�뽻���������滻Ϊ����֤�ݼ�ͼ�ס�</div>
+      </header>
+
+      <div class="toolbar">
+        <button id="zoomOut" class="btn" type="button">-</button>
+        <input id="zoomRange" type="range" min="60" max="320" step="5" value="100" />
+        <button id="zoomIn" class="btn" type="button">+</button>
+        <button id="zoomReset" class="btn" type="button">����</button>
+        <span id="zoomText" class="zoom-text">100%</span>
+      </div>
+
+      <div class="canvas-wrap">
+        <svg id="diagramSvg" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <footer class="meta" id="footText"></footer>
+    </main>
+  </div>
+
+  <script>
+    window.TOPIC_META = {
+      name: "���������źŴ�����",
+      summary: "����/�Ƕ�/��ѹ/�¶��źŴӲ��������ñ����Ĵ�������",
+      goal: "��֤���������źſ��š�ʱ����ȷ������һ�¡�",
+      inputs: "ADC ͨ��������������ԭʼֵ��",
+      outputs: "�˲����������Ч�Ա�־��",
+      entry: "�ȿ�ͨ��ӳ�䣬�ٿ��˲���У����",
+      risk: "���������Ŵ󵽿����뱣������",
+      verify: "���ͨ��ӳ�䡢ƫ�����˲��ӳ١�",
+      phase: "ʵʱ��������",
+      tags: ["Sensor", "Signal", "ADC"],
+      diagramType: "matrix-grid",
+      codeNodes: ["Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/driver/AdcApp.c","Code/EPS Code/signal_process_module/src/1_LIB/signalProcess.c","Code/EPS Code/sensor_driver_module/src/0_App/src/driver/position.c","Code/EPS Code/Global_Include/1_LIB/signalProcess.h","Code/EPS Code/UAES_BV2_driver_module/src/4_BSP/TC23x/Driver/src/Bsp_Adc.c"],
+      keyCalls: ["Bsp_Adc.c -> AdcApp.c: ԭʼͨ������ֵ��ȡ�뻺��","AdcApp.c -> signalProcess.c: ƫ��У�����˲�����Ч���ж�","position.c: �Ƕ�/λ���źŽ������쳣����","signalProcess.h: �Կ���������ͳһ�źŽӿ�"],
+      boundaries: ["ͨ��ӳ��������ת��������Ӳ������һһ��Ӧ","�˲����������������λ�ӳٶԿ����ȶ��Ե�Ӱ��","��Ч�źű����ڽ�����ƻ�ǰ����ϲ��ϱ�"],
+      checks: ["ͨ��ӳ����ȷ����ƫ��Ư�ƻع�","�˲�ǰ���ӳ�����������Ч������","�ź�ʧ��/����/�����쳣ע�����"],
+      flowNodes: [
+        { x: 90, y: 110, w: 220, h: 66, title: "ADC����", mode: "input", risk: false },
+        { x: 360, y: 110, w: 220, h: 66, title: "ͨ��ӳ��", mode: "logic", risk: false },
+        { x: 630, y: 110, w: 220, h: 66, title: "ƫ��У��", mode: "logic", risk: true },
+        { x: 900, y: 110, w: 220, h: 66, title: "�˲�����", mode: "logic", risk: true },
+        { x: 210, y: 300, w: 230, h: 66, title: "��Ч���ж�", mode: "act", risk: true },
+        { x: 500, y: 300, w: 220, h: 66, title: "����ͳһ", mode: "act", risk: false },
+        { x: 790, y: 300, w: 220, h: 66, title: "���Ʒ���", mode: "feedback", risk: false },
+        { x: 500, y: 500, w: 220, h: 66, title: "����ϱ�", mode: "diag", risk: false }
+      ],
+      flowEdges: [
+        [310, 143, 360, 143, "ͨ����"],
+        [580, 143, 630, 143, "У����"],
+        [850, 143, 900, 143, "�˲���"],
+        [1010, 176, 325, 300, "��Ч������"],
+        [440, 333, 500, 333, "����ת��"],
+        [720, 333, 790, 333, "��������"],
+        [900, 366, 610, 500, "�쳣��¼"],
+        [500, 500, 500, 366, "�۲��·"]
+      ],
+      functionAnchors: ["1) Code/EPS Code/UAES_BV2_driver_module/src/4_BSP/TC23x/Driver/src/Bsp_Adc.c :: BspAdc_ReadChannel","2) Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/driver/AdcApp.c :: AdcApp_UpdateRaw","3) Code/EPS Code/signal_process_module/src/1_LIB/signalProcess.c :: SignalProcess_FilterAndValidate","��չ) Code/EPS Code/sensor_driver_module/src/0_App/src/driver/position.c :: Position_Solve"],
+      searchKeywords: ["adc channel mapping","signal offset calibration","low pass filter","signal validity flag","sensor saturation"],
+      foot: "�Ǽܽ׶�˵������ͼ�����ڹ�ͨ�ṹ�͸Ķ���ڣ������Ჹ���뼶�ڵ㡢����ϸ�ںͱ߽糡����",
+      stateMachineLink: ""
+    };
+  </script>
+  <script src="eps-topic-shell.js?v=20260526-07"></script>
+</body>
+</html>
+

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>主/中断状态机协作</title>
+  <link rel="stylesheet" href="eps-topic-shell.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="side">
+      <h1 id="topicName">专题页</h1>
+      <p id="topicSummary" class="sub"></p>
+      <div id="tagWrap" style="margin-top: 8px;"></div>
+
+      <div class="group">
+        <h3>专题定位</h3>
+        <div class="kv">
+          <div>所属链路：<strong id="phaseText">-</strong></div>
+          <div>目标：<span id="goalText">-</span></div>
+          <div>输入：<span id="inText">-</span></div>
+          <div>输出：<span id="outText">-</span></div>
+          <div>改动入口：<span id="entryText">-</span></div>
+          <div>主要风险：<span id="riskText">-</span></div>
+          <div>验证建议：<span id="verifyText">-</span></div>
+        </div>
+      </div>
+
+      <div class="group ctrl">
+        <h3>视图控制</h3>
+        <select id="modeFilter">
+          <option value="all">全部节点</option>
+          <option value="input">输入链路</option>
+          <option value="logic">逻辑处理</option>
+          <option value="act">执行动作</option>
+          <option value="timing">时序/中断</option>
+          <option value="feedback">反馈回路</option>
+          <option value="diag">诊断记录</option>
+        </select>
+        <label class="ck"><input id="toggleLabels" type="checkbox" checked /> 显示连线标签</label>
+        <label class="ck"><input id="toggleRisk" type="checkbox" /> 高亮风险路径</label>
+        <label class="ck"><input id="toggleTiming" type="checkbox" checked /> 显示时序泳道</label>
+      </div>
+
+      <div class="group">
+        <a class="link" href="../eps-functional-architecture-overview.html" target="_blank" rel="noopener">返回总览页</a>
+        <br />
+        <a id="topicLink" class="link" href="#" style="display:none;">打开已实现专题页</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="head">
+        <div class="tt">专题骨架视图</div>
+        <div class="desc">该页为第一版骨架：先固定结构与交互，再逐步替换为代码证据级图谱。</div>
+      </header>
+
+      <div class="toolbar">
+        <button id="zoomOut" class="btn" type="button">-</button>
+        <input id="zoomRange" type="range" min="60" max="320" step="5" value="100" />
+        <button id="zoomIn" class="btn" type="button">+</button>
+        <button id="zoomReset" class="btn" type="button">重置</button>
+        <span id="zoomText" class="zoom-text">100%</span>
+      </div>
+
+      <div class="canvas-wrap">
+        <svg id="diagramSvg" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <footer class="meta" id="footText"></footer>
+    </main>
+  </div>
+
+  <script>
+    window.TOPIC_META = {
+      name: "主/中断状态机协作",
+      summary: "主状态机与中断状态机的事件协作和模式切换。",
+      goal: "保证状态迁移正确且边界行为可追踪。",
+      inputs: "事件触发、故障状态、模式请求。",
+      outputs: "状态迁移、任务使能和动作执行。",
+      entry: "先看迁移矩阵，再看事件写入点。",
+      risk: "漏迁移或误迁移会导致系统行为偏差。",
+      verify: "覆盖主路径与故障边界迁移。",
+      phase: "实时控制主链",
+      tags: ["StateMachine", "Event", "Mode"],
+
+      codeNodes: ["Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/stateMachine.c","Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/IntStateMachine.c","Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/TaskSchedule.c","Code/EPS Code/Global_Include/stateMachine.h","Code/EPS Code/Global_Include/IntStateMachine.h"],
+      keyCalls: ["TaskSchedule.c -\u003e stateMachine.c: 周期调度驱动主状态迁移","中断入口 -\u003e IntStateMachine.c: 快速事件写入与中断态迁移","stateMachine.c \u003c-\u003e IntStateMachine.c: 模式同步与动作门控","stateMachine.h: 状态枚举/事件矩阵对外约束"],
+      boundaries: ["主循环周期与 ISR 周期不得交叉覆盖同一状态写入口","事件置位与状态迁移必须原子化，避免竞态穿越","故障迁移优先级高于普通模式切换，禁止被延后"],
+      checks: ["覆盖 Init-\u003eRun-\u003eFault-\u003eRecover 全路径迁移","注入并发事件，确认迁移矩阵无非法跳转","确认主/中断状态一致性变量在周期边界稳定"],
+      flowNodes: [
+        { x: 100, y: 110, w: 210, h: 66, title: "事件采集", mode: "input", risk: false },
+        { x: 370, y: 110, w: 220, h: 66, title: "主态评估", mode: "logic", risk: false },
+        { x: 660, y: 110, w: 220, h: 66, title: "中断态锁存", mode: "timing", risk: true },
+        { x: 100, y: 290, w: 210, h: 66, title: "迁移判定", mode: "logic", risk: true },
+        { x: 370, y: 290, w: 220, h: 66, title: "使能门控", mode: "act", risk: true },
+        { x: 660, y: 290, w: 220, h: 66, title: "动作下发", mode: "act", risk: false },
+        { x: 370, y: 500, w: 220, h: 66, title: "状态回写", mode: "feedback", risk: false },
+        { x: 660, y: 500, w: 220, h: 66, title: "诊断记录", mode: "diag", risk: false }
+      ],
+      flowEdges: [
+        [310, 143, 370, 143, "事件驱动"],
+        [590, 143, 660, 143, "ISR同步"],
+        [770, 176, 210, 290, "竞态防护"],
+        [310, 323, 370, 323, "矩阵判定"],
+        [590, 323, 660, 323, "门控执行"],
+        [770, 356, 480, 500, "状态反馈"],
+        [480, 500, 770, 500, "诊断映射"],
+        [480, 500, 480, 356, "回写闭环"]
+      ],
+      functionAnchors: ["1) Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/TaskSchedule.c :: TaskSchedule_MainTick","2) Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/stateMachine.c :: StateMachine_MainLoop / StateMachine_HandleEvent","3) Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/IntStateMachine.c :: IntStateMachine_ISR","扩展) Code/EPS Code/Global_Include/stateMachine.h :: 状态枚举/事件定义"],
+      searchKeywords: ["state machine matrix","main state transition","interrupt state event","TaskSchedule state","fault transition gate"],
+      foot: "骨架阶段说明：本图先用于沟通结构和改动入口，后续会补代码级节点、配置细节和边界场景。",
+      stateMachineLink: "../state-machine-visualizer.html"
+    };
+  </script>
+  <script src="eps-topic-shell.js?v=20260526-07"></script>
+</body>
+</html>
+
+
+
+

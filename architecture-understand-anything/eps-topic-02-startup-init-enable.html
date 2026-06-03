@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>������ʼ����ʹ����</title>
+  <link rel="stylesheet" href="eps-topic-shell.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="side">
+      <h1 id="topicName">ר��ҳ</h1>
+      <p id="topicSummary" class="sub"></p>
+      <div id="tagWrap" style="margin-top: 8px;"></div>
+
+      <div class="group">
+        <h3>ר�ⶨλ</h3>
+        <div class="kv">
+          <div>������·��<strong id="phaseText">-</strong></div>
+          <div>Ŀ�꣺<span id="goalText">-</span></div>
+          <div>���룺<span id="inText">-</span></div>
+          <div>�����<span id="outText">-</span></div>
+          <div>�Ķ���ڣ�<span id="entryText">-</span></div>
+          <div>��Ҫ���գ�<span id="riskText">-</span></div>
+          <div>��֤���飺<span id="verifyText">-</span></div>
+        </div>
+      </div>
+
+      <div class="group ctrl">
+        <h3>��ͼ����</h3>
+        <select id="modeFilter">
+          <option value="all">ȫ���ڵ�</option>
+          <option value="input">������·</option>
+          <option value="logic">�߼�����</option>
+          <option value="act">ִ�ж���</option>
+          <option value="timing">ʱ��/�ж�</option>
+          <option value="feedback">������·</option>
+          <option value="diag">��ϼ�¼</option>
+        </select>
+        <label class="ck"><input id="toggleLabels" type="checkbox" checked /> ��ʾ���߱�ǩ</label>
+        <label class="ck"><input id="toggleRisk" type="checkbox" /> ��������·��</label>
+        <label class="ck"><input id="toggleTiming" type="checkbox" checked /> ��ʾʱ��Ӿ��</label>
+      </div>
+
+      <div class="group">
+        <a class="link" href="../eps-functional-architecture-overview.html" target="_blank" rel="noopener">��������ҳ</a>
+        <br />
+        <a id="topicLink" class="link" href="#" style="display:none;">����ʵ��ר��ҳ</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="head">
+        <div class="tt">ר��Ǽ���ͼ</div>
+        <div class="desc">��ҳΪ��һ��Ǽܣ��ȹ̶��ṹ�뽻���������滻Ϊ����֤�ݼ�ͼ�ס�</div>
+      </header>
+
+      <div class="toolbar">
+        <button id="zoomOut" class="btn" type="button">-</button>
+        <input id="zoomRange" type="range" min="60" max="320" step="5" value="100" />
+        <button id="zoomIn" class="btn" type="button">+</button>
+        <button id="zoomReset" class="btn" type="button">����</button>
+        <span id="zoomText" class="zoom-text">100%</span>
+      </div>
+
+      <div class="canvas-wrap">
+        <svg id="diagramSvg" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <footer class="meta" id="footText"></footer>
+    </main>
+  </div>
+
+  <script>
+    window.TOPIC_META = {
+      name: "������ʼ����ʹ����",
+      summary: "�ϵ絽�������ȫ���̣���ʼ�����Լ졢ʹ���ſء�",
+      goal: "��֤ϵͳ�ںϷ����������Ž��������״̬��",
+      inputs: "�ϵ�״̬��Ӳ����⡢��ʼ������źš�",
+      outputs: "ϵͳ������־������ʹ��״̬��",
+      entry: "�ӳ�ʼ�������̺��ſ��������롣",
+      risk: "ʹ��ʱ�����������쳣�����",
+      verify: "��֤���׶��ſ���ʧ�ܻ����߼���",
+      phase: "ʵʱ��������",
+      tags: ["Startup", "Gate", "Safety"],
+      diagramType: "startup-sequence",
+      codeNodes: ["Code/EPS Code/UAES_BV2_driver_module/src/5_LLD/TC23x/Cpu/CStart/IfxCpu_CStart0.c","Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/MotorControlPInterface.c","Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/stateMachine.c","Code/EPS Code/safety_module/src/0_App/src/safety/PowerManager.c","Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/TaskSchedule.c"],
+      keyCalls: ["CStart0.c: �ϵ��ײ��ʼ�������л�������","MotorControlPInterface.c: ģ���ʼ��������ӿڷ���","stateMachine.c: Init->Ready->Run �ſ�Ǩ��","PowerManager.c: ʹ��ǰ��Դ�����ǰ������У��"],
+      boundaries: ["����ʹ�ܱ�����ȫ��������ʼ�����֮��","�Լ�ʧ�ܱ���������·���������ƹ�ʹ���ſ�","�ϵ�׶β����ָ���Ӳ���������˳�򲻿ɽ���"],
+      checks: ["�ϵ�������/������·���ع�","��ʼ��ʧ�ܻ��������������֤","ʹ��ǰ��ؼ�״̬��һ���Լ��"],
+      flowNodes: [
+        { x: 100, y: 110, w: 220, h: 66, title: "�ϵ縴λ", mode: "input", risk: false },
+        { x: 390, y: 110, w: 220, h: 66, title: "�ײ��ʼ��", mode: "logic", risk: false },
+        { x: 680, y: 110, w: 220, h: 66, title: "ģ���Լ�", mode: "logic", risk: true },
+        { x: 100, y: 300, w: 220, h: 66, title: "�����ָ�", mode: "timing", risk: false },
+        { x: 390, y: 300, w: 220, h: 66, title: "ʹ���ſ�", mode: "act", risk: true },
+        { x: 680, y: 300, w: 220, h: 66, title: "��������", mode: "act", risk: false },
+        { x: 390, y: 500, w: 220, h: 66, title: "״̬����", mode: "feedback", risk: false },
+        { x: 680, y: 500, w: 220, h: 66, title: "�쳣����", mode: "diag", risk: true }
+      ],
+      flowEdges: [
+        [320, 143, 390, 143, "������"],
+        [610, 143, 680, 143, "�Լ�ǰ��"],
+        [790, 176, 210, 300, "��ʼ��ͬ��"],
+        [320, 333, 390, 333, "�ſ�����"],
+        [610, 333, 680, 333, "ʹ���·�"],
+        [790, 366, 500, 500, "״̬����"],
+        [500, 500, 790, 500, "ʧ�ܻ���"],
+        [500, 500, 500, 366, "�ջ�ȷ��"]
+      ],
+      functionAnchors: ["1) Code/EPS Code/UAES_BV2_driver_module/src/5_LLD/TC23x/Cpu/CStart/IfxCpu_CStart0.c :: IfxCpu_CStart0_Main","2) Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/MotorControlPInterface.c :: MotorControl_Init / InterfaceInit","3) Code/EPS Code/UAES_BV2_driver_module/src/0_App/src/stateMachine.c :: StateMachine_StartupTransition","��չ) Code/EPS Code/safety_module/src/0_App/src/safety/PowerManager.c :: PowerManager_PreEnableCheck"],
+      searchKeywords: ["startup init sequence","enable gate","power on self test","StateMachine startup","pre-enable check"],
+      foot: "�Ǽܽ׶�˵������ͼ�����ڹ�ͨ�ṹ�͸Ķ���ڣ������Ჹ���뼶�ڵ㡢����ϸ�ںͱ߽糡����",
+      stateMachineLink: ""
+    };
+  </script>
+  <script src="eps-topic-shell.js?v=20260526-07"></script>
+</body>
+</html>
+

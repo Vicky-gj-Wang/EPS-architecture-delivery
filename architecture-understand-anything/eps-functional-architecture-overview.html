@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EPS PMSM 功能架构总览</title>
+  <style>
+    :root {
+      --bg: #eef3f8;
+      --panel: #ffffff;
+      --ink: #10263d;
+      --muted: #4b6077;
+      --line: #d3deea;
+      --accent: #0f6ab8;
+      --accent-2: #0a8f74;
+      --warn: #b45309;
+      --danger: #b91c1c;
+      --state: #0b63b6;
+      --control: #0369a1;
+      --protect: #be123c;
+      --sched: #15803d;
+      --comm: #5b21b6;
+      --diag: #92400e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, #dceefb 0%, rgba(220, 238, 251, 0) 35%),
+        radial-gradient(circle at 88% 12%, #e3f8ef 0%, rgba(227, 248, 239, 0) 32%),
+        var(--bg);
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      min-height: 100vh;
+      gap: 14px;
+      padding: 14px;
+    }
+
+    .side,
+    .main {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      backdrop-filter: blur(4px);
+    }
+
+    .side {
+      padding: 14px;
+      position: sticky;
+      top: 14px;
+      height: calc(100vh - 28px);
+      overflow: auto;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: 24px;
+      letter-spacing: 0.2px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .badge-row {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #f7fbff;
+      color: #234668;
+    }
+
+    .nav {
+      margin-top: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #17416a;
+      background: #f2f8ff;
+      border: 1px solid #c8ddf4;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 13px;
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+
+    .nav a:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(21, 73, 121, 0.12);
+    }
+
+    .mini {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      background: #fbfdff;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .main {
+      padding: 14px;
+      overflow: auto;
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(120deg, #eaf6ff, #e9fcf4);
+      padding: 14px;
+    }
+
+    .hero-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .hero-sub {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .blocks {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      overflow: hidden;
+      animation: rise 320ms ease;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-head {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .card-body {
+      padding: 11px 12px 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .line {
+      font-size: 12px;
+      line-height: 1.5;
+      color: #28435f;
+    }
+
+    .line strong {
+      color: #0f3356;
+    }
+
+    .act {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #0e4f89;
+      text-decoration: none;
+      display: inline-block;
+      border: 1px solid #c0daf2;
+      border-radius: 8px;
+      padding: 5px 8px;
+      background: #f1f8ff;
+    }
+
+    .wide {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 12px;
+    }
+
+    .wide h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      background: #f9fbfd;
+    }
+
+    .step .k {
+      color: #4a6786;
+      font-size: 11px;
+    }
+
+    .step .v {
+      margin-top: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #173e63;
+    }
+
+    .step .d {
+      margin-top: 5px;
+      font-size: 12px;
+      color: #38516b;
+      line-height: 1.45;
+    }
+
+    .toolbox {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .toolbox select {
+      width: 100%;
+      border: 1px solid #b8cde4;
+      border-radius: 9px;
+      padding: 6px 8px;
+      font-size: 13px;
+      color: #12385d;
+      background: #fff;
+    }
+
+    .hint-box {
+      border: 1px dashed #9ab6d3;
+      border-radius: 10px;
+      background: #f5faff;
+      padding: 8px 10px;
+      color: #224664;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .foot {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #4a6077;
+      line-height: 1.5;
+    }
+
+    .topic-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .topic-col {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f9fbfd;
+      padding: 10px;
+    }
+
+    .topic-col h4 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: #1a3f64;
+    }
+
+    .topic-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .topic-list a {
+      text-decoration: none;
+      color: #184c78;
+      font-size: 12px;
+      line-height: 1.45;
+      padding: 6px 7px;
+      border: 1px solid #cfe1f1;
+      border-radius: 8px;
+      background: #f3f9ff;
+    }
+
+    .topic-list a:hover {
+      background: #e8f3ff;
+      border-color: #b5d3ed;
+    }
+
+    .chain-filter {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chain-filter button {
+      border: 1px solid #bfd9ef;
+      background: #f1f8ff;
+      color: #18466f;
+      border-radius: 999px;
+      font-size: 12px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .chain-filter button:hover {
+      background: #e8f3ff;
+    }
+
+    .topic-col.chain-focus {
+      outline: 2px solid #0f6ab8;
+      box-shadow: 0 0 0 3px rgba(15, 106, 184, 0.16);
+    }
+
+    .progress-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .progress-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f9fbfd;
+      padding: 10px;
+    }
+
+    .progress-card h4 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: #1a3f64;
+    }
+
+    .progress-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    .progress-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #d9e6f2;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 6px 8px;
+      font-size: 12px;
+      color: #274766;
+      line-height: 1.35;
+    }
+
+    .status {
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 2px 7px;
+      white-space: nowrap;
+    }
+
+    .status.done {
+      color: #0d5c43;
+      background: #dcf6ee;
+      border: 1px solid #a8e5cf;
+    }
+
+    .status.todo {
+      color: #7a450f;
+      background: #ffefd9;
+      border: 1px solid #f2cf9e;
+    }
+
+    .next-box {
+      margin-top: 10px;
+      border: 1px dashed #a8c4df;
+      border-radius: 12px;
+      background: #f4f9ff;
+      padding: 10px;
+    }
+
+    .next-box ul {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .next-box li {
+      font-size: 12px;
+      color: #2a4966;
+      line-height: 1.45;
+    }
+
+    .warn {
+      color: var(--warn);
+      font-weight: 700;
+    }
+
+    .danger {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    @media (max-width: 1200px) {
+      .shell { grid-template-columns: 1fr; }
+      .side { position: static; height: auto; }
+    }
+
+    @media (max-width: 900px) {
+      .blocks { grid-template-columns: 1fr; }
+      .roadmap { grid-template-columns: 1fr 1fr; }
+      .toolbox { grid-template-columns: 1fr; }
+      .topic-grid { grid-template-columns: 1fr; }
+      .progress-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="side">
+      <h1>EPS 功能架构总览</h1>
+      <p class="subtitle">
+        面向新同事的 PMSM-EPS 代码导览页：从功能目标、数据流、状态切换、保护和诊断角度统一理解系统。
+      </p>
+      <div class="badge-row">
+        <span class="badge">PMSM</span>
+        <span class="badge">EPS</span>
+        <span class="badge">三环控制</span>
+        <span class="badge">主中断双状态机</span>
+      </div>
+
+      <div class="nav">
+        <a href="#l0">L0 全景</a>
+        <a href="#modules">专题分块</a>
+        <a href="#topicIndex">专题骨架索引</a>
+        <a href="#progress">填充进度看板</a>
+        <a href="#edit">修改入口建议</a>
+        <a href="#navigate">模块/改动类型导航</a>
+        <a href="#onboard">新同事上手路线</a>
+        <a href="#checklists">修改清单</a>
+      </div>
+
+      <div class="mini">
+        推荐读法：
+        <br />1) 先看 L0 全景定位模块
+        <br />2) 再看专题卡片的输入/输出与改动入口
+        <br />3) 按修改入口建议选择起手文件
+      </div>
+    </aside>
+
+    <main class="main">
+      <section id="l0" class="hero">
+        <div class="hero-title">L0 全景：输入 -> 决策 -> 执行 -> 反馈 -> 安全 -> 诊断</div>
+        <p class="hero-sub">
+          这是一条面向功能的主链路。状态机决定当前运行模式，三环控制负责转矩与动态性能，保护链路兜底安全，通信诊断负责外部可观测和参数闭环。
+        </p>
+        <div style="margin-top: 10px;">
+          <svg viewBox="0 0 1120 220" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <marker id="arr" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto">
+                <path d="M0,0 L11,5.5 L0,11 Z" fill="#4b6178" />
+              </marker>
+            </defs>
+            <rect x="20" y="70" width="150" height="72" rx="12" fill="#e0f2fe" stroke="#1e6ea8" />
+            <text x="95" y="100" text-anchor="middle" font-size="14" fill="#0d3e66">传感器与命令</text>
+            <text x="95" y="120" text-anchor="middle" font-size="11" fill="#355f84">扭矩/角度/电流采样</text>
+
+            <rect x="205" y="70" width="150" height="72" rx="12" fill="#e8f0ff" stroke="#305fd4" />
+            <text x="280" y="100" text-anchor="middle" font-size="14" fill="#123c8f">状态机协作</text>
+            <text x="280" y="120" text-anchor="middle" font-size="11" fill="#355f84">主状态机 + 中断状态机</text>
+
+            <rect x="390" y="70" width="170" height="72" rx="12" fill="#dff5ff" stroke="#0284c7" />
+            <text x="475" y="100" text-anchor="middle" font-size="14" fill="#0b4f78">三环控制链</text>
+            <text x="475" y="120" text-anchor="middle" font-size="11" fill="#355f84">位置/速度/电流 + FOC</text>
+
+            <rect x="595" y="70" width="150" height="72" rx="12" fill="#e6f8ed" stroke="#1d8b57" />
+            <text x="670" y="100" text-anchor="middle" font-size="14" fill="#135a39">PWM 与驱动执行</text>
+            <text x="670" y="120" text-anchor="middle" font-size="11" fill="#355f84">逆变器输出与电机响应</text>
+
+            <rect x="780" y="30" width="150" height="72" rx="12" fill="#fce8ee" stroke="#be123c" />
+            <text x="855" y="60" text-anchor="middle" font-size="14" fill="#8c1230">安全保护链</text>
+            <text x="855" y="80" text-anchor="middle" font-size="11" fill="#7b3646">故障检测/降级/关断</text>
+
+            <rect x="780" y="115" width="150" height="72" rx="12" fill="#efe7ff" stroke="#6d28d9" />
+            <text x="855" y="145" text-anchor="middle" font-size="14" fill="#5325ab">通信与标定</text>
+            <text x="855" y="165" text-anchor="middle" font-size="11" fill="#5a4e8f">UDS/XCP/参数持久化</text>
+
+            <rect x="965" y="70" width="135" height="72" rx="12" fill="#fff2e5" stroke="#c76d1c" />
+            <text x="1032" y="100" text-anchor="middle" font-size="14" fill="#7c3f11">诊断可观测</text>
+            <text x="1032" y="120" text-anchor="middle" font-size="11" fill="#6f5a46">DTC/事件/运行状态</text>
+
+            <path d="M170 106 L205 106" stroke="#4b6178" stroke-width="1.5" fill="none" marker-end="url(#arr)" />
+            <path d="M355 106 L390 106" stroke="#4b6178" stroke-width="1.5" fill="none" marker-end="url(#arr)" />
+            <path d="M560 106 L595 106" stroke="#4b6178" stroke-width="1.5" fill="none" marker-end="url(#arr)" />
+            <path d="M745 106 L780 66" stroke="#4b6178" stroke-width="1.4" fill="none" marker-end="url(#arr)" />
+            <path d="M745 106 L780 150" stroke="#4b6178" stroke-width="1.4" fill="none" marker-end="url(#arr)" />
+            <path d="M930 66 L965 96" stroke="#4b6178" stroke-width="1.4" fill="none" marker-end="url(#arr)" />
+            <path d="M930 150 L965 116" stroke="#4b6178" stroke-width="1.4" fill="none" marker-end="url(#arr)" />
+          </svg>
+        </div>
+      </section>
+
+      <section id="modules" class="blocks">
+        <article class="card">
+          <div class="card-head">
+            <div><span class="dot" style="background: var(--state);"></span><strong>状态机协作</strong></div>
+            <span style="font-size: 11px; color: #4a6380;">运行模式管理</span>
+          </div>
+          <div class="card-body">
+            <div class="line"><strong>目标：</strong>定义系统在自检、初始化、运行、故障、休眠等模式下的合法迁移。</div>
+            <div class="line"><strong>输入：</strong>事件触发、故障标志、唤醒/休眠请求。</div>
+            <div class="line"><strong>输出：</strong>任务使能、控制链激活状态、保护动作。</div>
+            <div class="line"><strong>起手改动：</strong>先查迁移矩阵，再查事件源和动作函数。</div>
+            <a class="act" href="state-machine-visualizer.html" target="_blank" rel="noopener">打开状态机专题页</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div><span class="dot" style="background: var(--control);"></span><strong>三环电机控制</strong></div>
+            <span style="font-size: 11px; color: #4a6380;">性能与跟踪</span>
+          </div>
+          <div class="card-body">
+            <div class="line"><strong>目标：</strong>在约束内实现转矩响应、稳态精度和动态平顺。</div>
+            <div class="line"><strong>输入：</strong>目标扭矩/角度、估算速度、电流采样值。</div>
+            <div class="line"><strong>输出：</strong>d/q 轴电流指令、SVPWM 占空比。</div>
+            <div class="line"><strong>起手改动：</strong>先定位环路边界和周期，再动 PI 参数或前馈项。</div>
+            <div class="line"><strong class="warn">验证重点：</strong>采样相位一致性、限幅顺序、抗积分饱和。</div>
+            <a class="act" href="topics/eps-topic-06-three-loop-control-foc.html?v=20260526-04" target="_blank" rel="noopener">打开三环控制专题页</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div><span class="dot" style="background: var(--protect);"></span><strong>安全保护链</strong></div>
+            <span style="font-size: 11px; color: #4a6380;">安全兜底</span>
+          </div>
+          <div class="card-body">
+            <div class="line"><strong>目标：</strong>过流/过压/过温/传感器异常下快速进入可控安全状态。</div>
+            <div class="line"><strong>输入：</strong>采样阈值比较、状态机阶段、故障计数器。</div>
+            <div class="line"><strong>输出：</strong>降扭矩、关 PWM、锁故障、故障清除策略。</div>
+            <div class="line"><strong>起手改动：</strong>先看故障仲裁，再看状态机中的故障出口。</div>
+            <div class="line"><strong class="danger">风险：</strong>误触发会导致可驾性问题，漏触发会导致安全风险。</div>
+            <a class="act" href="topics/eps-topic-09-safety-protection-chain.html" target="_blank" rel="noopener">打开安全保护专题页</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div><span class="dot" style="background: var(--sched);"></span><strong>调度与时序</strong></div>
+            <span style="font-size: 11px; color: #4a6380;">实时性骨架</span>
+          </div>
+          <div class="card-body">
+            <div class="line"><strong>目标：</strong>保证中断和任务在周期与优先级上满足控制闭环时限。</div>
+            <div class="line"><strong>输入：</strong>定时器节拍、ADC/EVENT 中断、任务触发表。</div>
+            <div class="line"><strong>输出：</strong>任务执行顺序、执行窗口、丢帧/延迟统计。</div>
+            <div class="line"><strong>起手改动：</strong>先看高优先级 ISR，再看周期任务调用链。</div>
+            <div class="line"><strong class="warn">验证重点：</strong>最坏执行时间、抖动、竞态与共享资源保护。</div>
+            <a class="act" href="topics/eps-topic-08-scheduling-interrupt-priority.html" target="_blank" rel="noopener">打开调度时序专题页</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div><span class="dot" style="background: var(--comm);"></span><strong>通信与标定</strong></div>
+            <span style="font-size: 11px; color: #4a6380;">外部接口</span>
+          </div>
+          <div class="card-body">
+            <div class="line"><strong>目标：</strong>支持 UDS 诊断、XCP 标定与参数在线/离线一致性。</div>
+            <div class="line"><strong>输入：</strong>CAN 报文、会话状态、标定写入请求。</div>
+            <div class="line"><strong>输出：</strong>参数生效、掉电持久化、诊断响应。</div>
+            <div class="line"><strong>起手改动：</strong>先界定参数生命周期，再改映射与持久化流程。</div>
+            <div class="line"><strong class="warn">验证重点：</strong>会话权限、写保护、掉电恢复一致性。</div>
+            <a class="act" href="topics/eps-topic-10-comm-diagnostics-uds-xcp.html" target="_blank" rel="noopener">打开通信诊断专题页</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div><span class="dot" style="background: var(--diag);"></span><strong>诊断与可观测性</strong></div>
+            <span style="font-size: 11px; color: #4a6380;">问题定位</span>
+          </div>
+          <div class="card-body">
+            <div class="line"><strong>目标：</strong>让问题可复现、可定位、可量化评估。</div>
+            <div class="line"><strong>输入：</strong>故障事件、运行变量快照、状态迁移日志。</div>
+            <div class="line"><strong>输出：</strong>DTC、诊断帧、调试观测点。</div>
+            <div class="line"><strong>起手改动：</strong>优先补可观测点，再改控制/保护逻辑。</div>
+            <div class="line"><strong class="warn">建议：</strong>每个新增策略都带一组可验证观测变量。</div>
+            <a class="act" href="topics/eps-topic-13-validation-observability.html" target="_blank" rel="noopener">打开验证可观测专题页</a>
+          </div>
+        </article>
+      </section>
+
+      <section id="topicIndex" class="wide">
+        <h3>专题骨架索引（13 页）</h3>
+        <p style="font-size: 12px; color: #4a6077; line-height: 1.5;">
+          先全量过一遍骨架，再按优先级细化。推荐顺序：先“实时控制主链”，再“高风险配置链”，最后“架构支撑链”。
+          <a class="act" style="margin-left: 8px;" href="topics/eps-topic-index.html" target="_blank" rel="noopener">打开总索引页</a>
+        </p>
+        <div class="chain-filter">
+          <button type="button" onclick="focusChain('chain-main')">一键到实时控制主链</button>
+          <button type="button" onclick="focusChain('chain-risk')">一键到高风险配置链</button>
+          <button type="button" onclick="focusChain('chain-support')">一键到架构支撑链</button>
+        </div>
+        <div class="topic-grid">
+          <div id="chain-main" class="topic-col">
+            <h4>实时控制主链（优先）</h4>
+            <div class="topic-list">
+              <a href="topics/eps-topic-02-startup-init-enable.html" target="_blank" rel="noopener">02 启动初始化与使能链</a>
+              <a href="topics/eps-topic-03-state-machine-collaboration.html" target="_blank" rel="noopener">03 主/中断状态机协作</a>
+              <a href="topics/eps-topic-04-initial-position-learning.html" target="_blank" rel="noopener">04 初始位置自学习与对齐</a>
+              <a href="topics/eps-topic-05-sensor-signal-chain.html" target="_blank" rel="noopener">05 传感器与信号处理链</a>
+              <a href="topics/eps-topic-06-three-loop-control-foc.html?v=20260526-04" target="_blank" rel="noopener">06 三环控制与 FOC</a>
+              <a href="topics/eps-topic-09-safety-protection-chain.html" target="_blank" rel="noopener">09 安全保护与故障仲裁</a>
+              <a href="topics/eps-topic-12-torque-request-management.html" target="_blank" rel="noopener">12 扭矩请求管理与仲裁</a>
+            </div>
+          </div>
+          <div id="chain-risk" class="topic-col">
+            <h4>高风险配置链</h4>
+            <div class="topic-list">
+              <a href="topics/eps-topic-07-pwm-adc-trigger-sampling.html" target="_blank" rel="noopener">07 PWM 触发与 ADC 采样关系</a>
+              <a href="topics/eps-topic-08-scheduling-interrupt-priority.html" target="_blank" rel="noopener">08 调度时序与中断优先级</a>
+              <a href="topics/eps-topic-11-parameter-flash-consistency.html" target="_blank" rel="noopener">11 参数一致性与 DFlash 持久化</a>
+            </div>
+          </div>
+          <div id="chain-support" class="topic-col">
+            <h4>架构支撑链</h4>
+            <div class="topic-list">
+              <a href="topics/eps-topic-01-layered-architecture.html" target="_blank" rel="noopener">01 软件分层与模块依赖</a>
+              <a href="topics/eps-topic-10-comm-diagnostics-uds-xcp.html" target="_blank" rel="noopener">10 通信诊断（UDS/XCP）</a>
+              <a href="topics/eps-topic-13-validation-observability.html" target="_blank" rel="noopener">13 验证回归与可观测性</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="progress" class="wide">
+        <h3>专题填充进度看板</h3>
+        <p style="font-size: 12px; color: #4a6077; line-height: 1.5;">
+          当前策略是“先全专题骨架，再按链路逐步填充代码证据”。下面显示已细化与待细化状态，方便你和团队评审时直接对齐范围。
+        </p>
+        <div class="progress-grid">
+          <article class="progress-card">
+            <h4>实时控制主链（7 项）</h4>
+            <div class="progress-list">
+              <div class="progress-item"><span>02 启动初始化与使能链</span><span class="status done">已细化</span></div>
+              <div class="progress-item"><span>03 主/中断状态机协作</span><span class="status done">已细化</span></div>
+              <div class="progress-item"><span>04 初始位置自学习与对齐</span><span class="status done">已细化</span></div>
+              <div class="progress-item"><span>05 传感器与信号处理链</span><span class="status done">已细化</span></div>
+              <div class="progress-item"><span>06 三环控制与 FOC</span><span class="status done">已细化</span></div>
+              <div class="progress-item"><span>09 安全保护与故障仲裁</span><span class="status done">已细化</span></div>
+              <div class="progress-item"><span>12 扭矩请求管理与仲裁</span><span class="status done">已细化</span></div>
+            </div>
+          </article>
+
+          <article class="progress-card">
+            <h4>高风险配置链（3 项）</h4>
+            <div class="progress-list">
+              <div class="progress-item"><span>07 PWM 触发与 ADC 采样关系</span><span class="status done">已细化</span></div>
+              <div class="progress-item"><span>08 调度时序与中断优先级</span><span class="status done">已细化</span></div>
+              <div class="progress-item"><span>11 参数一致性与 DFlash 持久化</span><span class="status done">已细化</span></div>
+            </div>
+          </article>
+
+          <article class="progress-card">
+            <h4>架构支撑链（3 项）</h4>
+            <div class="progress-list">
+              <div class="progress-item"><span>01 软件分层与模块依赖</span><span class="status done">已细化</span></div>
+              <div class="progress-item"><span>10 通信诊断（UDS/XCP）</span><span class="status done">已细化</span></div>
+              <div class="progress-item"><span>13 验证回归与可观测性</span><span class="status done">已细化</span></div>
+            </div>
+          </article>
+
+          <article class="progress-card">
+            <h4>当前统计</h4>
+            <div class="progress-list">
+              <div class="progress-item"><span>专题总数</span><span class="status done">13</span></div>
+              <div class="progress-item"><span>已细化</span><span class="status done">13</span></div>
+              <div class="progress-item"><span>待细化</span><span class="status done">0</span></div>
+              <div class="progress-item"><span>完成度</span><span class="status done">100%</span></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="next-box">
+          <strong style="font-size: 13px; color: #18466f;">收尾交付动作（全部专题已细化）</strong>
+          <ul>
+            <li>执行跨专题一致性回归：状态机、调度、保护、通信、参数持久化、扭矩仲裁联动。</li>
+            <li>骨架差异度检查：确认 03/06/09 已采用专属 flowNodes/flowEdges，不再使用同构模板。</li>
+            <li>覆盖率检查：确认 13/13 专题页均已配置 flowNodes/flowEdges 专属流程结构。</li>
+            <li>冻结版本并输出“专题-代码入口-验证项”总清单，作为交付基线。</li>
+            <li>组织一次评审走读：按实时主链 -> 高风险链 -> 支撑链顺序验收。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="edit" class="wide">
+        <h3>修改入口建议助手</h3>
+        <p style="font-size: 12px; color: #4a6077; line-height: 1.5;">
+          先从功能目标选择改动场景，页面会给出推荐起手顺序。建议按照“需求 -> 入口模块 -> 影响链 -> 验证”推进，避免一上来改底层参数。
+        </p>
+        <div class="toolbox">
+          <select id="scenarioSelect">
+            <option value="state">状态跳转不符合预期</option>
+            <option value="control">转矩响应慢或有抖动</option>
+            <option value="protect">故障触发策略需调整</option>
+            <option value="sched">周期任务超时或抖动</option>
+            <option value="comm">UDS/XCP 参数流程调整</option>
+          </select>
+          <div id="scenarioHint" class="hint-box"></div>
+        </div>
+      </section>
+
+      <section id="navigate" class="wide">
+        <h3>按模块 / 按改动类型跳专题</h3>
+        <p style="font-size: 12px; color: #4a6077; line-height: 1.5;">
+          你可以从工程入口出发：先选改动模块，再看推荐专题；或按改动类型直接跳到高风险专题页。
+        </p>
+        <div class="toolbox">
+          <select id="moduleSelect">
+            <option value="state">状态机与调度模块</option>
+            <option value="control">控制算法与 FOC 模块</option>
+            <option value="safety">安全保护模块</option>
+            <option value="comm">通信诊断与标定模块</option>
+            <option value="sensor">传感器与信号链模块</option>
+            <option value="storage">参数存储与持久化模块</option>
+          </select>
+          <div id="moduleHint" class="hint-box"></div>
+        </div>
+        <div class="toolbox" style="margin-top: 10px;">
+          <select id="changeTypeSelect">
+            <option value="timing">时序/周期/中断优先级改动</option>
+            <option value="gain">控制参数/限幅/斜率改动</option>
+            <option value="diag">诊断服务/会话权限改动</option>
+            <option value="persist">参数持久化与恢复策略改动</option>
+            <option value="safety">故障阈值/降级策略改动</option>
+          </select>
+          <div id="changeTypeHint" class="hint-box"></div>
+        </div>
+      </section>
+
+      <section id="onboard" class="wide">
+        <h3>新同事 1 小时上手路线</h3>
+        <div class="roadmap">
+          <div class="step">
+            <div class="k">15 分钟</div>
+            <div class="v">看全景 + 状态机</div>
+            <div class="d">先理解系统“在什么模式下做什么事”。</div>
+          </div>
+          <div class="step">
+            <div class="k">15 分钟</div>
+            <div class="v">看三环与调度</div>
+            <div class="d">建立周期、时序、控制链三者关联。</div>
+          </div>
+          <div class="step">
+            <div class="k">15 分钟</div>
+            <div class="v">看保护与诊断</div>
+            <div class="d">明白系统如何“出错后安全退化”。</div>
+          </div>
+          <div class="step">
+            <div class="k">15 分钟</div>
+            <div class="v">跑一次改动助手</div>
+            <div class="d">按实际需求演练“从哪改、如何验”。</div>
+          </div>
+        </div>
+        <h4 style="margin: 14px 0 8px; font-size: 14px; color: #18466f;">按角色路线</h4>
+        <div class="roadmap">
+          <div class="step">
+            <div class="k">控制算法工程师</div>
+            <div class="v">06 -> 12 -> 07 -> 09</div>
+            <div class="d">先闭环性能，再校核触发相位与保护限幅。</div>
+          </div>
+          <div class="step">
+            <div class="k">嵌入式平台工程师</div>
+            <div class="v">02 -> 08 -> 01 -> 11</div>
+            <div class="d">先启动与调度，再确认分层边界和持久化事务。</div>
+          </div>
+          <div class="step">
+            <div class="k">诊断标定工程师</div>
+            <div class="v">10 -> 11 -> 13 -> 09</div>
+            <div class="d">先会话与参数流，再完成可观测性与故障一致性核验。</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="checklists" class="wide">
+        <h3>修改前后检查清单</h3>
+        <p style="font-size: 12px; color: #4a6077; line-height: 1.5;">
+          为了降低改动风险，建议每次提交都先走“修改前检查”，完成后再走“修改后回归”。
+        </p>
+        <div class="topic-grid">
+          <div class="topic-col">
+            <h4>专题体系冻结</h4>
+            <div class="topic-list">
+              <a href="架构交付物/EPS_专题体系冻结_v2.md" target="_blank" rel="noopener">打开专题体系冻结 v2</a>
+            </div>
+          </div>
+          <div class="topic-col">
+            <h4>修改前检查</h4>
+            <div class="topic-list">
+              <a href="架构交付物/EPS_修改前检查清单.md" target="_blank" rel="noopener">打开修改前检查清单</a>
+            </div>
+          </div>
+          <div class="topic-col">
+            <h4>修改后回归</h4>
+            <div class="topic-list">
+              <a href="架构交付物/EPS_修改后回归清单.md" target="_blank" rel="noopener">打开修改后回归清单</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <p class="foot">
+        交付建议：先按专题图逐块评审，再维护本汇总页作为“入口地图”。这样既能保证局部准确，也能保留全局可读性。
+      </p>
+    </main>
+  </div>
+
+  <script>
+    function focusChain(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      document.querySelectorAll('.topic-col').forEach((n) => n.classList.remove('chain-focus'));
+      el.classList.add('chain-focus');
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    }
+
+    const hintData = {
+      state: "推荐顺序：状态迁移矩阵 -> 事件来源 -> 状态动作函数 -> 回归关键路径（自检/初始化/运行/故障/休眠）。",
+      control: "推荐顺序：目标量定义 -> 采样与估算链路 -> 环路参数与限幅 -> PWM 执行。先确认周期和相位，再调参数。",
+      protect: "推荐顺序：故障检测阈值 -> 计数与仲裁 -> 降级动作 -> 故障恢复。重点验证误报和漏报边界。",
+      sched: "推荐顺序：中断优先级 -> 周期任务映射 -> 共享资源锁 -> 执行时长统计。先保实时，再谈优化。",
+      comm: "推荐顺序：协议入口 -> 参数映射 -> 生效时机 -> 持久化。要覆盖上电恢复和会话权限场景。"
+    };
+
+    const moduleHintData = {
+      state: "推荐专题：03 主/中断状态机协作 -> 08 调度时序与中断优先级 -> 02 启动初始化。",
+      control: "推荐专题：06 三环控制与 FOC -> 12 扭矩请求管理与仲裁 -> 07 PWM-ADC 触发链。",
+      safety: "推荐专题：09 安全保护与故障仲裁 -> 03 状态机协作 -> 13 验证回归。",
+      comm: "推荐专题：10 通信诊断（UDS/XCP） -> 11 参数一致性与 DFlash 持久化。",
+      sensor: "推荐专题：05 传感器与信号处理链 -> 04 初始位置自学习与对齐 -> 07 PWM-ADC 触发链。",
+      storage: "推荐专题：11 参数一致性与 DFlash 持久化 -> 10 通信诊断（UDS/XCP） -> 13 验证回归。"
+    };
+
+    const changeTypeHintData = {
+      timing: "优先查看：08 调度时序与中断优先级、07 PWM 触发与 ADC 采样关系、03 状态机协作。",
+      gain: "优先查看：06 三环控制与 FOC、12 扭矩请求管理与仲裁、05 传感器与信号处理链。",
+      diag: "优先查看：10 通信诊断（UDS/XCP）、13 验证回归与可观测性、09 安全保护链。",
+      persist: "优先查看：11 参数一致性与 DFlash 持久化、02 启动初始化与使能链、10 通信诊断。",
+      safety: "优先查看：09 安全保护与故障仲裁、03 状态机协作、12 扭矩请求管理与仲裁。"
+    };
+
+    const scenarioSelect = document.getElementById("scenarioSelect");
+    const scenarioHint = document.getElementById("scenarioHint");
+    const moduleSelect = document.getElementById("moduleSelect");
+    const moduleHint = document.getElementById("moduleHint");
+    const changeTypeSelect = document.getElementById("changeTypeSelect");
+    const changeTypeHint = document.getElementById("changeTypeHint");
+
+    function updateHint() {
+      scenarioHint.textContent = hintData[scenarioSelect.value] || "请选择场景。";
+    }
+
+    function updateModuleHint() {
+      moduleHint.textContent = moduleHintData[moduleSelect.value] || "请选择模块。";
+    }
+
+    function updateChangeTypeHint() {
+      changeTypeHint.textContent = changeTypeHintData[changeTypeSelect.value] || "请选择改动类型。";
+    }
+
+    scenarioSelect.addEventListener("change", updateHint);
+    moduleSelect.addEventListener("change", updateModuleHint);
+    changeTypeSelect.addEventListener("change", updateChangeTypeHint);
+    updateHint();
+    updateModuleHint();
+    updateChangeTypeHint();
+  </script>
+</body>
+</html>

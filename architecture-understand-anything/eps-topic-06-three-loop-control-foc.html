@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>三环控制与 FOC</title>
+  <link rel="stylesheet" href="eps-topic-shell.css" />
+  <style>
+    #diagramSvg [data-mode] { opacity: 1 !important; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="side">
+      <h1 id="topicName">专题页</h1>
+      <p id="topicSummary" class="sub"></p>
+      <div id="tagWrap" style="margin-top: 8px;"></div>
+
+      <div class="group">
+        <h3>专题定位</h3>
+        <div class="kv">
+          <div>所属链路：<strong id="phaseText">-</strong></div>
+          <div>目标：<span id="goalText">-</span></div>
+          <div>输入：<span id="inText">-</span></div>
+          <div>输出：<span id="outText">-</span></div>
+          <div>改动入口：<span id="entryText">-</span></div>
+          <div>主要风险：<span id="riskText">-</span></div>
+          <div>验证建议：<span id="verifyText">-</span></div>
+        </div>
+      </div>
+
+      <div class="group ctrl">
+        <h3>视图控制</h3>
+        <select id="modeFilter">
+          <option value="all">全部节点</option>
+          <option value="input">输入链路</option>
+          <option value="logic">逻辑处理</option>
+          <option value="act">执行动作</option>
+          <option value="timing">时序/中断</option>
+          <option value="feedback">反馈回路</option>
+          <option value="diag">诊断记录</option>
+        </select>
+        <label class="ck"><input id="toggleLabels" type="checkbox" checked /> 显示连线标签</label>
+        <label class="ck"><input id="toggleRisk" type="checkbox" /> 高亮风险路径</label>
+        <label class="ck"><input id="toggleTiming" type="checkbox" checked /> 显示时序泳道</label>
+      </div>
+
+      <div class="group">
+        <a class="link" href="../eps-functional-architecture-overview.html" target="_blank" rel="noopener">返回总览页</a>
+        <br />
+        <a id="topicLink" class="link" href="#" style="display:none;">打开已实现专题页</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="head">
+        <div class="tt">专题细化视图（可交接版）</div>
+        <div class="desc">按主链+支路展开到节点级细节，面向新同事快速上手与改动定位。</div>
+      </header>
+
+      <div class="toolbar">
+        <button id="zoomOut" class="btn" type="button">-</button>
+        <input id="zoomRange" type="range" min="60" max="320" step="5" value="100" />
+        <button id="zoomIn" class="btn" type="button">+</button>
+        <button id="zoomReset" class="btn" type="button">重置</button>
+        <span id="zoomText" class="zoom-text">100%</span>
+      </div>
+
+      <div class="canvas-wrap">
+        <svg id="diagramSvg" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <footer class="meta" id="footText"></footer>
+    </main>
+  </div>
+
+  <script>
+    window.TOPIC_META = {
+      name: "三环控制与 FOC",
+      summary: "位置/速度/电流控制与 FOC 执行链。",
+      goal: "在约束内实现稳定响应和动态性能。",
+      inputs: "目标扭矩、估算速度、电流反馈。",
+      outputs: "dq 电流指令、PWM 占空比。",
+      entry: "从环路边界和周期映射入手。",
+      risk: "参数调整不当会导致振荡或迟滞。",
+      verify: "验证稳态误差、响应时间和限幅行为。",
+      phase: "实时控制主链",
+      tags: ["PMSM", "FOC", "Control"],
+      diagramType: "swimlane",
+      disableModeFilter: true,
+      laneTitles: ["约束与保护支路", "三环主链路", "执行与反馈支路"],
+
+      codeNodes: ["Code/EPS Code/control_algorithm_module/src/1_LIB/control.c","Code/EPS Code/foc_module/src/0_App/src/foc.c","Code/EPS Code/foc_module/src/0_App/inc/TorqueToIdq.h","Code/EPS Code/Global_Include/1_LIB/control.h","Code/EPS Code/Global_Include/foc.h"],
+      keyCalls: ["control.c: Position/Speed/Current 三环顺序执行","signalProcess.c -\u003e control.c: MrMechSpeed 与电流反馈注入","TorqueToIdq.h -\u003e foc.c: 扭矩目标映射 Id/Iq 参考","foc.c -\u003e Bsp_Pwm.h: SVPWM 占空比下发"],
+      boundaries: ["顺序固定：位置环 \u003e 速度环 \u003e 电流环，禁止跨周期错位","周期约束：电流环(100us) \u003c 速度环(1ms) \u003c 位置环(1ms/2ms)","限幅与 anti-windup 必须在同一周期完成，避免饱和回弹"],
+      checks: ["稳态误差、上升时间、超调量三指标回归","低速/高速边界切换时 dq 电流连续性验证","采样噪声与扭矩阶跃下的鲁棒性回归"],
+      nodeDetails: {
+        "扭矩目标输入": ["入口: SetMtrDmdTq_Nm()", "变量: Tq_Ref / TqReqFilt"],
+        "反馈预处理": ["获取: MrMechSpeed + iABC", "滤波/去噪: 一阶 LPF"],
+        "位置环 PI": ["输出: SpeedReq", "约束: PositionErr 限幅"],
+        "速度环 PI": ["输出: Iq_Ref", "约束: SpeedErr 与扭矩上限"],
+        "电流环 PI": ["输出: Ud/Uq", "补偿: decouple + 前馈"],
+        "限幅与抗饱和": ["顺序: clamp -> anti-windup", "防止积分项持续累积"],
+        "故障降级门控": ["触发: overCurrent/overVoltage", "动作: 降扭矩或关PWM"],
+        "观测与诊断": ["记录: 误差/限幅命中次数", "输出: DTC + 诊断量"],
+        "Id/Iq 参考生成": ["映射: Torque -> Id/Iq", "模式: assist/return"],
+        "SVPWM 占空比下发": ["接口: Bsp_Pwm_Update()", "输出: pwmDuty[3]"],
+        "ADC 采样回读": ["采样: Ia/Ib/Ic + 母线电压", "回写: FOC 当前周期反馈"]
+      },
+      flowNodes: [
+        { x: 500, y: 118, w: 250, h: 88, title: "扭矩目标输入", mode: "input", risk: false },
+        { x: 500, y: 228, w: 250, h: 88, title: "反馈预处理", mode: "feedback", risk: false },
+        { x: 500, y: 338, w: 250, h: 88, title: "位置环 PI", mode: "logic", risk: false },
+        { x: 500, y: 448, w: 250, h: 88, title: "速度环 PI", mode: "logic", risk: true },
+        { x: 500, y: 558, w: 250, h: 88, title: "电流环 PI", mode: "logic", risk: true },
+
+        { x: 110, y: 388, w: 250, h: 88, title: "限幅与抗饱和", mode: "act", risk: true },
+        { x: 110, y: 528, w: 250, h: 88, title: "故障降级门控", mode: "diag", risk: true },
+
+        { x: 900, y: 228, w: 250, h: 88, title: "ADC 采样回读", mode: "feedback", risk: false },
+        { x: 900, y: 338, w: 250, h: 88, title: "观测与诊断", mode: "diag", risk: false },
+        { x: 900, y: 448, w: 250, h: 88, title: "Id/Iq 参考生成", mode: "act", risk: false },
+        { x: 900, y: 558, w: 250, h: 88, title: "SVPWM 占空比下发", mode: "act", risk: false }
+      ],
+      flowEdges: [
+        [625, 206, 625, 228, "Tq_Ref 注入"],
+        [625, 316, 625, 338, "反馈参与位置误差"],
+        [625, 426, 625, 448, "SpeedReq 传递"],
+        [625, 536, 625, 558, "Iq_Ref 传递"],
+
+        [500, 392, 360, 432, "位置/速度误差限幅"],
+        [360, 432, 500, 492, "anti-windup 回注"],
+        [1025, 382, 360, 572, "故障事件触发降级"],
+        [360, 572, 900, 602, "降级后限扭/关断下发"],
+
+        [750, 272, 900, 272, "采样通道更新"],
+        [900, 292, 750, 292, "iABC 回写主链"],
+        [750, 492, 900, 492, "速度环输出映射 Id/Iq"],
+        [900, 512, 750, 602, "Id/Iq 回注电流环"],
+        [750, 602, 900, 602, "Ud/Uq -> SVPWM"],
+        [1025, 558, 1025, 426, "执行量记录到诊断"]
+      ],
+      functionAnchors: ["1) Code/EPS Code/control_algorithm_module/src/1_LIB/control.c :: Control_PositionLoop / Control_SpeedLoop","2) Code/EPS Code/control_algorithm_module/src/1_LIB/control.c :: Control_CurrentLoop","3) Code/EPS Code/foc_module/src/0_App/src/foc.c :: Foc_Run","扩展) Code/EPS Code/foc_module/src/0_App/inc/TorqueToIdq.h :: TorqueToIdq_Map"],
+      searchKeywords: ["PI current loop","dq current reference","SVPWM update","anti windup","torque to idq"],
+      foot: "细化说明：本图按“中央主链 + 左侧约束支路 + 右侧执行反馈支路”组织，建议新同事按自上而下顺序阅读，再沿横向分支理解限制条件与异常处理。",
+      stateMachineLink: ""
+    };
+  </script>
+  <script src="eps-topic-shell.js?v=20260526-04"></script>
+  <script>
+    (function () {
+      function enforceFullVisible() {
+        const svg = document.getElementById("diagramSvg");
+        if (!svg) return;
+
+        svg.querySelectorAll("[data-mode]").forEach((n) => {
+          n.removeAttribute("data-mode");
+          n.style.opacity = "1";
+        });
+
+        const mode = document.getElementById("modeFilter");
+        if (mode) {
+          mode.value = "all";
+          mode.disabled = true;
+          mode.title = "该专题固定展示全部节点，避免浏览器缓存导致筛选异常。";
+        }
+      }
+
+      window.addEventListener("load", () => {
+        enforceFullVisible();
+        setTimeout(enforceFullVisible, 120);
+        setTimeout(enforceFullVisible, 500);
+        setTimeout(enforceFullVisible, 1500);
+        const guard = setInterval(enforceFullVisible, 500);
+        setTimeout(() => clearInterval(guard), 20000);
+      });
+
+      const svg = document.getElementById("diagramSvg");
+      if (svg && typeof MutationObserver !== "undefined") {
+        new MutationObserver(() => enforceFullVisible()).observe(svg, { childList: true, subtree: true });
+      }
+    })();
+  </script>
+</body>
+</html>
+
+
+
+

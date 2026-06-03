@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>����һ������ DFlash �־û�</title>
+  <link rel="stylesheet" href="eps-topic-shell.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="side">
+      <h1 id="topicName">ר��ҳ</h1>
+      <p id="topicSummary" class="sub"></p>
+      <div id="tagWrap" style="margin-top: 8px;"></div>
+
+      <div class="group">
+        <h3>ר�ⶨλ</h3>
+        <div class="kv">
+          <div>������·��<strong id="phaseText">-</strong></div>
+          <div>Ŀ�꣺<span id="goalText">-</span></div>
+          <div>���룺<span id="inText">-</span></div>
+          <div>�����<span id="outText">-</span></div>
+          <div>�Ķ���ڣ�<span id="entryText">-</span></div>
+          <div>��Ҫ���գ�<span id="riskText">-</span></div>
+          <div>��֤���飺<span id="verifyText">-</span></div>
+        </div>
+      </div>
+
+      <div class="group ctrl">
+        <h3>��ͼ����</h3>
+        <select id="modeFilter">
+          <option value="all">ȫ���ڵ�</option>
+          <option value="input">������·</option>
+          <option value="logic">�߼�����</option>
+          <option value="act">ִ�ж���</option>
+          <option value="timing">ʱ��/�ж�</option>
+          <option value="feedback">������·</option>
+          <option value="diag">��ϼ�¼</option>
+        </select>
+        <label class="ck"><input id="toggleLabels" type="checkbox" checked /> ��ʾ���߱�ǩ</label>
+        <label class="ck"><input id="toggleRisk" type="checkbox" /> ��������·��</label>
+        <label class="ck"><input id="toggleTiming" type="checkbox" checked /> ��ʾʱ��Ӿ��</label>
+      </div>
+
+      <div class="group">
+        <a class="link" href="../eps-functional-architecture-overview.html" target="_blank" rel="noopener">��������ҳ</a>
+        <br />
+        <a id="topicLink" class="link" href="#" style="display:none;">����ʵ��ר��ҳ</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="head">
+        <div class="tt">ר��Ǽ���ͼ</div>
+        <div class="desc">��ҳΪ��һ��Ǽܣ��ȹ̶��ṹ�뽻���������滻Ϊ����֤�ݼ�ͼ�ס�</div>
+      </header>
+
+      <div class="toolbar">
+        <button id="zoomOut" class="btn" type="button">-</button>
+        <input id="zoomRange" type="range" min="60" max="320" step="5" value="100" />
+        <button id="zoomIn" class="btn" type="button">+</button>
+        <button id="zoomReset" class="btn" type="button">����</button>
+        <span id="zoomText" class="zoom-text">100%</span>
+      </div>
+
+      <div class="canvas-wrap">
+        <svg id="diagramSvg" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <footer class="meta" id="footText"></footer>
+    </main>
+  </div>
+
+  <script>
+    window.TOPIC_META = {
+      name: "����һ������ DFlash �־û�",
+      summary: "����������Ч�����籣��ͻָ�һ������·��",
+      goal: "��֤���в�����־û�����һ���ҿɻع���",
+      inputs: "����д�����󡢰汾��Ϣ��д�������ԡ�",
+      outputs: "RAM/Flash һ�²��������ָ�״̬��",
+      entry: "�ȿ������������ڣ��ٿ�д������",
+      risk: "���Ӱ��������ܣ��ҿ�������ʱ�򶶶���",
+      verify: "��֤����ָ���дʧ�ܻع����汾���ݡ�",
+      phase: "�߷���������",
+      tags: ["DFlash", "Calibration", "Consistency"],
+      diagramType: "cycle-flow",
+
+      codeNodes: ["Code/EPS Code/UAES_BV2_driver_module/src/2_SRVSW/DFlashASWInterface.c","Code/EPS Code/UAES_BV2_driver_module/src/2_SRVSW/DFlashBaseInterface.c","Code/EPS Code/UAES_BV2_driver_module/src/2_SRVSW/DFlashBaseInterface.h","Code/EPS Code/asw_interface_module/src/0_App/src/asw_eeprom.c","Code/EPS Code/communication_stack_module/src/0_App/src/communicate.c"],
+      keyCalls: ["ͨ��д������ -\u003e DFlashASWInterface.c: �������","DFlashBaseInterface.c: ��д��У�顢�汾У��","asw_eeprom.c: RAM ������ NVM ͬ������","�����׶�: ��ȡ NVM -\u003e �����ָ� -\u003e ��Ч�㲥"],
+      boundaries: ["д�봰�ڱ���ܿ���ʵʱ ISR �ؼ���","�汾��/CRC/�ع���־����ͬ�������","������Чʱ����־û�ʱ��������׷��"],
+      checks: ["�����ж�д��ָ�һ���Բ���","дʧ�ܻع���汾�����Բ���","���ߵ��κ�����һ���������ܶԱ�"],
+      flowNodes: [
+        { x: 100, y: 110, w: 220, h: 66, title: "д������", mode: "input", risk: false },
+        { x: 390, y: 110, w: 220, h: 66, title: "�����װ", mode: "logic", risk: true },
+        { x: 680, y: 110, w: 220, h: 66, title: "DFlash��д", mode: "act", risk: true },
+        { x: 100, y: 300, w: 220, h: 66, title: "CRCУ��", mode: "logic", risk: true },
+        { x: 390, y: 300, w: 220, h: 66, title: "�汾У��", mode: "logic", risk: false },
+        { x: 680, y: 300, w: 220, h: 66, title: "RAM����ͬ��", mode: "act", risk: false },
+        { x: 390, y: 500, w: 220, h: 66, title: "�����ָ�", mode: "feedback", risk: false },
+        { x: 680, y: 500, w: 220, h: 66, title: "�ع����", mode: "diag", risk: true }
+      ],
+      flowEdges: [
+        [320, 143, 390, 143, "����������"],
+        [610, 143, 680, 143, "��дִ��"],
+        [790, 176, 210, 300, "У��ض�"],
+        [320, 333, 390, 333, "�汾һ��"],
+        [610, 333, 680, 333, "�������"],
+        [790, 366, 500, 500, "�ָ����"],
+        [500, 500, 790, 500, "�쳣�ع�"],
+        [500, 500, 500, 366, "״̬ȷ��"]
+      ],
+      functionAnchors: ["1) Code/EPS Code/UAES_BV2_driver_module/src/2_SRVSW/DFlashASWInterface.c :: DFlashASW_WriteRequest","2) Code/EPS Code/UAES_BV2_driver_module/src/2_SRVSW/DFlashBaseInterface.c :: DFlashBase_WritePage / DFlashBase_VerifyCrc","3) Code/EPS Code/asw_interface_module/src/0_App/src/asw_eeprom.c :: AswEeprom_SyncRamMirror","��չ) Code/EPS Code/communication_stack_module/src/0_App/src/communicate.c :: ����д��Ự���"],
+      searchKeywords: ["DFlash transaction","parameter rollback","CRC verify","power loss recovery","calibration persistence"],
+      foot: "�Ǽܽ׶�˵������ͼ�����ڹ�ͨ�ṹ�͸Ķ���ڣ������Ჹ���뼶�ڵ㡢����ϸ�ںͱ߽糡����",
+      stateMachineLink: ""
+    };
+  </script>
+  <script src="eps-topic-shell.js?v=20260526-07"></script>
+</body>
+</html>
+
+
+
+
